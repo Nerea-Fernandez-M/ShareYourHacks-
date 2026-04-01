@@ -42,7 +42,6 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry excluding="estructuras" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="estructuras"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -89,7 +88,6 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry excluding="estructuras" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="estructuras"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
