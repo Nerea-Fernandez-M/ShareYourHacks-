@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "sqlite3.h"
 #include "navegacion.h"
 
 //Funciones de gestion
@@ -227,5 +228,57 @@ void iniciarSesion(Ventana *v){
             return;
         }
         // si opcion == 1 el while repite y vuelve a pedir credenciales
+    }
+}
+
+void registrar(Ventana *v){
+    char email[128];
+    char nombre[64];
+    char contrasena[128];
+    char contrasena2[128];
+
+    while (1) {
+        printf("Correo electronico: ");
+        scanf("%127s", email);
+        while (getchar() != '\n');
+
+        printf("Nombre de usuario: ");
+        scanf("%63s", nombre);
+        while (getchar() != '\n');
+
+        printf("Contrasena: ");
+        scanf("%127s", contrasena);
+        while (getchar() != '\n');
+
+        printf("Repetir contrasena: ");
+        scanf("%127s", contrasena2);
+        while (getchar() != '\n');
+
+        // Validar que las contraseñas coinciden
+        if (strcmp(contrasena, contrasena2) != 0) {
+            printf("Las contrasenas no coinciden, intentalo de nuevo.\n\n");
+            continue;
+        }
+
+        // Insertar en la BD con rol 2 (Hacker)
+        int resultado = insertarUsuario(v->db, nombre, email, contrasena, 2);
+
+        if (resultado == SQLITE_OK) {
+            // Registro correcto, iniciar sesion automaticamente
+            int id     = 0;
+            int puntos = 0;
+            obtenerUsuarioPorCredenciales(v->db, nombre, contrasena, &id, &puntos);
+
+            v->usuario = malloc(sizeof(Usuario));
+            v->usuario->id     = id;
+            v->usuario->total_puntos = puntos;
+            strncpy(v->usuario->nombre, nombre, sizeof(v->usuario->nombre) - 1);
+
+            navegar(v, VENTANA_PERFIL);
+            return;
+        }
+
+        // Error en la BD (nombre o email duplicado, u otro error)
+        printf("No se ha podido registrar el usuario, intentalo de nuevo.\n\n");
     }
 }

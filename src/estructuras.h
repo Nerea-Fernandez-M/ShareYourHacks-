@@ -35,7 +35,8 @@ typedef enum { //Para reto
 
 typedef enum { //Para user
 	ORGANIZADOR,
-	HACKER
+	HACKER,
+	STAFF
 } TipoRol;
 
 //Structs

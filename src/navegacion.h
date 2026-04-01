@@ -12,7 +12,6 @@ typedef enum {
 	VENTANA_APUNTARSE,
 	VENTANA_RANKING,
 	VENTANA_PERFIL,
-	VENTANA_RANKING,
 	VENTANA_ORGANIZAR_RETO,
     VENTANA_EXIT,
     VENTANA_COUNT
@@ -23,6 +22,7 @@ typedef struct{
     TipoVentana historial[16];
     int historialTop;
     Usuario *usuario;
+    sqlite3     *db;
     Reto *retoSeleccionado;
     int filtro;
 } Ventana;
