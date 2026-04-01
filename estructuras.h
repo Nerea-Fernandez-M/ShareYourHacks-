@@ -86,6 +86,6 @@ typedef struct {
 	TipoRol tipoRol;
 	float media_puntuacion;
 	int total_puntos;
-} User;
+} Usuario;
 
 #endif /* ESTRUCTURAS_H_ */
