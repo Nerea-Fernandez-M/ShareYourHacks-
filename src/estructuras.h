@@ -13,7 +13,8 @@
 typedef enum { //Para participa
 	EN_ESPERA,
 	ACEPTADO,
-	RECHAZADO
+	RECHAZADO,
+    ESTADO_ACEPTACION_COUNT
 } EstadoAceptacion;
 
 typedef enum { //Para reto
@@ -25,18 +26,21 @@ typedef enum { //Para reto
 typedef enum { //Para reto
 	FACIL,
 	MEDIO,
-	DIFICIL
+	DIFICIL,
+	DIFICULTAD_RETO_COUNT
 } DificultadReto;
 
 typedef enum { //Para reto
 	CTF,
-	HACKATHON
+	HACKATHON,
+    TIPO_RETO_COUNT
 } TipoReto;
 
 typedef enum { //Para user
 	ORGANIZADOR,
 	HACKER,
-	STAFF
+	STAFF,
+	TIPO_ROL_COUNT
 } TipoRol;
 
 //Structs
@@ -76,6 +80,7 @@ typedef struct {
 	char fecha_f[20];				// fecha final reto
 	char fecha_i_inscripcion[20];	// fecha inicio inscripcion
 	char fecha_f_inscripcion[20];	// fecha fin inscripcion
+	int id_organizador;
 	int puntos;
 }Reto;
 
@@ -88,5 +93,11 @@ typedef struct {
 	float media_puntuacion;
 	int total_puntos;
 } Usuario;
+
+//Conversion de enums
+const char *estado_aceptacion_a_string(EstadoAceptacion estado);
+const char *tipo_reto_a_string        (TipoReto tipo);
+const char *dificultad_reto_a_string  (DificultadReto dificultad);
+const char *tipo_rol_a_string         (TipoRol rol);
 
 #endif /* ESTRUCTURAS_H_ */

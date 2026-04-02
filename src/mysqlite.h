@@ -46,11 +46,21 @@ int listarRetosOrganizadosUsuario (sqlite3 *db, int id_usuario, Reto *retos_out,
 int obtenerRankingUsuario      (sqlite3 *db, int id_usuario, int *ranking_out);
 int obtenerPuntosParticipacion (sqlite3 *db, int id_usuario, int *puntos_out);
 int obtenerPuntosOrganizacion  (sqlite3 *db, int id_usuario, int *puntos_out);
+	//Funciones reto activo
+int obtenerRolEnReto        (sqlite3 *db, int id_usuario, int id_reto, TipoRol *rol_out);
+int obtenerPuestoEnReto     (sqlite3 *db, int id_usuario, int id_reto, int *puesto_out);
+int obtenerDiasRestantes    (sqlite3 *db, int id_reto, int *dias_out);
 
 // Equipos
 int insertarEquipo(sqlite3 *db, const char *nombre, int id_reto, const char *ids_usuarios);
 int obtenerEquipo(sqlite3 *db, int id, char *nombre);
 int listarEquiposPorReto(sqlite3 *db, int id_reto);
+
+//Funciones apuntarse a equipo
+int retoRequiereEquipo   (sqlite3 *db, int id_reto, int *requiere_out);
+int obtenerEquipoPorNombre(sqlite3 *db, const char *nombre, int id_reto,
+                            int *id_equipo_out);
+int unirseAEquipo        (sqlite3 *db, int id_usuario, int id_equipo);
 
 // Participaciones
 int insertarParticipacion(sqlite3 *db, int id_usuario, int id_reto, 

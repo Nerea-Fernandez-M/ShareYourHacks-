@@ -181,29 +181,302 @@ void funcionalidadVerRetos(Ventana *v) {
 
 void funcionalidadReto(Ventana *v){
 
-	//Print del texto
+	//gestionar estado del reto
+	if(v->retoSeleccionado->estadoReto == SIN_COMENZAR){
 
-	//Gestion de la consola
+		//Llamadas a BD
+		char nombre[30] = "";
+		char email[50] = "";
+		obtenerUsuario(v->db, v->retoSeleccionado->id_organizador, &nombre, &email);
 
-	//Llamada a navegar
+		//Prints
+		printf("%s\n",v->retoSeleccionado->titulo);
+		printf("Creado por:%s \n", nombre);
+		printf("Resumen: %s\n",v->retoSeleccionado->descripcion);
+		printf("Tipo de reto: %s\n",tipo_reto_a_string(v->retoSeleccionado->tipoReto));
+		printf("Inscripcion: %s-%s\n",v->retoSeleccionado->fecha_i_inscripcion,v->retoSeleccionado->fecha_f_inscripcion );
+		printf("Dificultad: %s\n",dificultad_reto_a_string(v->retoSeleccionado->dificultadReto));
+		printf("Puntos: %d\n",v->retoSeleccionado->puntos);
+		printf("Pulsa 1 para apuntarte o 0 para volver a la pagina anterior:  \n");
+
+		//Gestion navegacion
+	    int opcion;
+	    scanf("%d", &opcion);
+	    while (getchar() != '\n');
+
+	    switch(opcion){
+	    	    case 0:
+	    	    	volver(v);
+	    	    	break;
+	    	    case 1:
+	    	    	navegar(v,VENTANA_RETO_COMPLETO);
+	    	    	break;
+		        default:
+		            printf("Opcion no valida, intentalo de nuevo.\n");
+		            break;
+	    	    }
+	}else if(v->retoSeleccionado->estadoReto == EN_CURSO){
+
+		//Llamadas a BD
+		char nombre[30] = "";
+		char email[50] = "";
+		obtenerUsuario(v->db, v->retoSeleccionado->id_organizador, &nombre, &email);
+
+		TipoRol rol = HACKER;
+		int puesto = 0;
+		int dias_restantes = 0;
+		obtenerRolEnReto (v->db, v->usuario->id, v->retoSeleccionado->id, &rol);
+		obtenerPuestoEnReto (v->db, v->usuario->id, v->retoSeleccionado->id, &puesto);
+		obtenerDiasRestantes (v->db, v->retoSeleccionado->id, &dias_restantes);
+
+		//Prints
+		printf("%s\n",v->retoSeleccionado->titulo);
+		printf("Creado por:%s \n", nombre);
+		printf("Resumen: %s\n",v->retoSeleccionado->descripcion);
+		printf("Tu rol: %s\n", tipo_rol_a_string(rol));
+		printf("Tipo de reto: %s\n",tipo_reto_a_string(v->retoSeleccionado->tipoReto));
+		printf("Tiempo restante: %d dias\n", dias_restantes);
+		printf("Tu puesto: #%d\n",  puesto);
+		printf("1) Ver detalles\n");
+		printf("2) Ver ranking del reto\n");
+		printf("0) Volver a la pantalla anterior\n");
+		printf("Que quieres hacer: \n");
+
+		//Gestion navegacion
+	    int opcion;
+	    scanf("%d", &opcion);
+	    while (getchar() != '\n');
+
+	    switch(opcion){
+	    case 0:
+	    	volver(v);
+	    	break;
+	    case 1:
+	    	navegar(v,VENTANA_RETO_COMPLETO);
+	    	break;
+	    case 2:
+	    	navegar(v,VENTANA_RANKING);
+	    	break;
+        default:
+            printf("Opcion no valida, intentalo de nuevo.\n");
+            break;
+	    }
+
+	}else{ //Reto finalizado
+
+		//Llamadas a BD
+		char nombre[30] = "";
+		char email[50] = "";
+		obtenerUsuario(v->db, v->retoSeleccionado->id_organizador, &nombre, &email);
+
+		TipoRol rol = HACKER;
+		obtenerRolEnReto        (v->db, v->usuario->id, v->retoSeleccionado->id, &rol);
+
+		//Prints
+		printf("%s\n",v->retoSeleccionado->titulo);
+		printf("Creado por:%s\n", nombre);
+		printf("Resumen: %s\n",v->retoSeleccionado->descripcion);
+		printf("Este reto ya ha finalizado\n");
+		printf("Tipo de reto: %s\n",tipo_reto_a_string(v->retoSeleccionado->tipoReto));
+		printf("Pulsa 1 para ver el ranking del reto o 0 para volver a la ventana anterior:  \n");
+
+		//Gestion navegacion
+	    int opcion;
+	    scanf("%d", &opcion);
+	    while (getchar() != '\n');
+
+	    switch(opcion){
+	    case 0:
+	    	volver(v);
+	    	break;
+	    case 1:
+	    	navegar(v,VENTANA_RANKING);
+	    	break;
+        default:
+            printf("Opcion no valida, intentalo de nuevo.\n");
+            break;
+	    }
+	}
 }
 
 void funcionalidadRetoCompleto(Ventana *v){
 
+	///Llamdas A Bd
+	char nombre[30] = "";
+	char email[50] = "";
+	obtenerUsuario(v->db, v->retoSeleccionado->id_organizador, &nombre, &email);
+
+	TipoRol rol = HACKER;
+	obtenerRolEnReto (v->db, v->usuario->id, v->retoSeleccionado->id, &rol);
+	int puesto = 0;
+	obtenerPuestoEnReto (v->db, v->usuario->id, v->retoSeleccionado->id, &puesto);
+
 	//Print del texto
+	printf("%s\n",v->retoSeleccionado->titulo);
+	printf("Creado por:%s \n", nombre);
+	printf("Resumen: %s\n",v->retoSeleccionado->descripcion);
+	printf("Tipo de reto: %s\n",tipo_reto_a_string(v->retoSeleccionado->tipoReto));
+	printf("Tu puesto: #%d\n",  puesto);
+	printf("Pulsa 1 para descargar archivos adicionales o 0 para volver al menu: ");
 
 	//Gestion de la consola
+    int opcion;
+    scanf("%d", &opcion);
+    while (getchar() != '\n');
 
-	//Llamada a navegar
+    switch(opcion){
+    case 0:
+    	volver(v);
+    	break;
+    case 1:
+    	printf("No hay archivos extra para este reto");
+    	navegar(v,VENTANA_RETO);
+    	break;
+    default:
+        printf("Opcion no valida, intentalo de nuevo.\n");
+        break;
+    }
 }
 
 void funcionalidadApuntarse(Ventana *v){
 
-	//Print del texto
+	void funcionalidadApuntarseReto(Ventana *v) {
 
-	//Gestion de la consola
+	    // Titulo del reto
+	    printf("%s\n", v->retoSeleccionado->titulo);
 
-	//Llamada a navegar
+	    // Elegir rol
+	    printf("Pulsa 1 para ser Hacker o 2 para ser miembro del Staff: ");
+	    int opcion_rol;
+	    scanf("%d", &opcion_rol);
+	    while (getchar() != '\n');
+
+	    int id_rol;
+	    if (opcion_rol == 2) {
+	        id_rol = 3;  // STAFF
+	    } else {
+	        id_rol = 2;  // HACKER
+	    }
+
+	    // Motivacion (puede contener espacios, usamos fgets)
+	    char motivacion[256];
+	    printf("Escribe brevemente tu motivacion para participar en este reto: ");
+	    fgets(motivacion, sizeof(motivacion), stdin);
+	    motivacion[strcspn(motivacion, "\n")] = '\0';
+
+	    // Confirmar inscripcion
+	    printf("Pulsa 1 para apuntarte o 0 para volver al menu: ");
+	    int confirmar;
+	    scanf("%d", &confirmar);
+	    while (getchar() != '\n');
+
+	    if (confirmar == 0) {
+	        volver(v);
+	        return;
+	    }
+
+	    // Comprobar si el reto requiere equipo
+	    int requiere_equipo = 0;
+	    retoRequiereEquipo(v->db, v->retoSeleccionado->id, &requiere_equipo);
+
+	    if (!requiere_equipo) {
+	        //Inscripcion directa
+	        int resultado = insertarParticipacion(v->db, v->usuario->id,
+	                                              v->retoSeleccionado->id,
+	                                              0, motivacion);
+	        if (resultado == SQLITE_OK)
+	            printf("Te has inscrito en %s correctamente.\n",
+	                   v->retoSeleccionado->titulo);
+	        else
+	            printf("Algo ha ido mal al inscribirse, intentalo de nuevo.\n");
+
+	        volver(v);
+	        return;
+	    }
+
+	    // S requiere qeuipo hay que gestionarlo
+	    printf("Pulsa 1 para unirte a un equipo o 2 para crear uno: ");
+	    int opcion_equipo;
+	    scanf("%d", &opcion_equipo);
+	    while (getchar() != '\n');
+
+	    int id_equipo = 0;
+
+	    if (opcion_equipo == 1) {
+
+	        // Unirse a equipo existente por nombre
+	        while (1) {
+	            printf("Introduce el nombre de tu equipo: ");
+	            char nombre_equipo[64];
+	            scanf("%63s", nombre_equipo);
+	            while (getchar() != '\n');
+
+	            int encontrado = obtenerEquipoPorNombre(v->db, nombre_equipo,
+	                                                    v->retoSeleccionado->id,
+	                                                    &id_equipo);
+	            if (encontrado == SQLITE_OK) {
+	                int unido = unirseAEquipo(v->db, v->usuario->id, id_equipo);
+	                if (unido == SQLITE_OK) {
+	                    printf("Te has unido al grupo %s correctamente.\n",
+	                           nombre_equipo);
+	                    break;
+	                }
+	            }
+
+	            printf("Algo ha ido mal, vuelve a introducir el nombre "
+	                   "de tu equipo o pulsa 0 para salir: ");
+	            int salir;
+	            scanf("%d", &salir);
+	            while (getchar() != '\n');
+
+	            if (salir == 0) {
+	                volver(v);
+	                return;
+	            }
+	        }
+
+	    } else {
+	        // Crear equipo nuevo
+	        while (1) {
+	            printf("Introduce el nombre de tu equipo: ");
+	            char nombre_equipo[64];
+	            scanf("%63s", nombre_equipo);
+	            while (getchar() != '\n');
+
+	            // El codigo del equipo es su id en la BD
+	            char ids_usuario[16];
+	            snprintf(ids_usuario, sizeof(ids_usuario), "%d", v->usuario->id);
+
+	            int resultado = insertarEquipo(v->db, nombre_equipo,
+	                                           v->retoSeleccionado->id,
+	                                           ids_usuario);
+	            if (resultado == SQLITE_OK) {
+	                // Recuperar el id del equipo recien creado
+	                obtenerEquipoPorNombre(v->db, nombre_equipo,
+	                                       v->retoSeleccionado->id,
+	                                       &id_equipo);
+	                printf("Este es el codigo de tu equipo: %d\n", id_equipo);
+
+	                // Actualizar num_miembros
+	                unirseAEquipo(v->db, v->usuario->id, id_equipo);
+	                break;
+	            }
+	            printf("Este nombre no es valido, prueba con otro.\n");
+	        }
+	    }
+
+	    // Insertar participacion con el equipo asignado
+	    int resultado = insertarParticipacion(v->db, v->usuario->id,
+	                                          v->retoSeleccionado->id,
+	                                          id_equipo, motivacion);
+	    if (resultado == SQLITE_OK)
+	        printf("Te has inscrito en %s correctamente.\n",
+	               v->retoSeleccionado->titulo);
+	    else
+	        printf("Algo ha ido mal al inscribirse, intentalo de nuevo.\n");
+
+	    volver(v);
+	}
 }
 
 void funcionalidadRanking(Ventana *v){

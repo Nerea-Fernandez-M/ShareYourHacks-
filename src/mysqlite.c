@@ -537,6 +537,84 @@ int listarRetosOrganizadosUsuario(sqlite3 *db, int id_usuario, Reto *retos_out, 
     return SQLITE_OK;
 }
 
+//Funciones reto activo
+// Rol del usuario en un reto concreto
+int obtenerRolEnReto(sqlite3 *db, int id_usuario, int id_reto, TipoRol *rol_out) {
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT id_rol FROM Participaciones "
+                      "WHERE id_usuario = ? AND id_reto = ?";
+
+    int resultado = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    if (resultado != SQLITE_OK) {
+        printf("Error: %s\n", sqlite3_errmsg(db));
+        return resultado;
+    }
+
+    sqlite3_bind_int(stmt, 1, id_usuario);
+    sqlite3_bind_int(stmt, 2, id_reto);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        *rol_out = (TipoRol)sqlite3_column_int(stmt, 0);
+        sqlite3_finalize(stmt);
+        return SQLITE_OK;
+    }
+
+    sqlite3_finalize(stmt);
+    return 1;
+}
+
+// Puesto del usuario en el ranking de un reto concreto
+int obtenerPuestoEnReto(sqlite3 *db, int id_usuario, int id_reto, int *puesto_out) {
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT COUNT(*) + 1 FROM Participaciones "
+                      "WHERE id_reto = ? AND puntos > "
+                      "(SELECT puntos FROM Participaciones "
+                      " WHERE id_usuario = ? AND id_reto = ?)";
+
+    int resultado = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    if (resultado != SQLITE_OK) {
+        printf("Error: %s\n", sqlite3_errmsg(db));
+        return resultado;
+    }
+
+    sqlite3_bind_int(stmt, 1, id_reto);
+    sqlite3_bind_int(stmt, 2, id_usuario);
+    sqlite3_bind_int(stmt, 3, id_reto);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        *puesto_out = sqlite3_column_int(stmt, 0);
+        sqlite3_finalize(stmt);
+        return SQLITE_OK;
+    }
+
+    sqlite3_finalize(stmt);
+    return 1;
+}
+
+// Tiempo restante del reto en dias
+int obtenerDiasRestantes(sqlite3 *db, int id_reto, int *dias_out) {
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT CAST(julianday(fecha_fin) - julianday('now') AS INTEGER) "
+                      "FROM Retos WHERE id = ?";
+
+    int resultado = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    if (resultado != SQLITE_OK) {
+        printf("Error: %s\n", sqlite3_errmsg(db));
+        return resultado;
+    }
+
+    sqlite3_bind_int(stmt, 1, id_reto);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        *dias_out = sqlite3_column_int(stmt, 0);
+        sqlite3_finalize(stmt);
+        return SQLITE_OK;
+    }
+
+    sqlite3_finalize(stmt);
+    return 1;
+}
+
 	//Obtener puntuaciones
 // Posicion del usuario en el ranking global
 int obtenerRankingUsuario(sqlite3 *db, int id_usuario, int *ranking_out) {
@@ -688,6 +766,76 @@ int listarEquiposPorReto(sqlite3 *db, int id_reto) {
     printf("Total: %d equipos\n\n", count);
     sqlite3_finalize(stmt);
     return SQLITE_OK;
+}
+
+//Funciones para apuntarse
+// Comprobar si un reto es de tipo HACKATHON (requiere equipo)
+int retoRequiereEquipo(sqlite3 *db, int id_reto, int *requiere_out) {
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT tipo FROM Retos WHERE id = ?";
+
+    int resultado = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    if (resultado != SQLITE_OK) {
+        printf("Error: %s\n", sqlite3_errmsg(db));
+        return resultado;
+    }
+
+    sqlite3_bind_int(stmt, 1, id_reto);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        const char *tipo = (char *)sqlite3_column_text(stmt, 0);
+        *requiere_out = (strcmp(tipo, "HACKATHON") == 0) ? 1 : 0;
+        sqlite3_finalize(stmt);
+        return SQLITE_OK;
+    }
+
+    sqlite3_finalize(stmt);
+    return 1;
+}
+
+// Buscar equipo por nombre dentro de un reto
+int obtenerEquipoPorNombre(sqlite3 *db, const char *nombre, int id_reto,
+                            int *id_equipo_out) {
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT id FROM Equipos WHERE nombre = ? AND id_reto = ?";
+
+    int resultado = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    if (resultado != SQLITE_OK) {
+        printf("Error: %s\n", sqlite3_errmsg(db));
+        return resultado;
+    }
+
+    sqlite3_bind_text(stmt, 1, nombre,   -1, SQLITE_STATIC);
+    sqlite3_bind_int (stmt, 2, id_reto);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        *id_equipo_out = sqlite3_column_int(stmt, 0);
+        sqlite3_finalize(stmt);
+        return SQLITE_OK;
+    }
+
+    sqlite3_finalize(stmt);
+    return 1;  // no encontrado
+}
+
+// Unirse a equipo
+int unirseAEquipo(sqlite3 *db, int id_usuario, int id_equipo) {
+    sqlite3_stmt *stmt;
+    const char *sql = "UPDATE Equipos SET num_miembros = num_miembros + 1 "
+                      "WHERE id = ?";
+
+    int resultado = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    if (resultado != SQLITE_OK) {
+        printf("Error: %s\n", sqlite3_errmsg(db));
+        return resultado;
+    }
+
+    sqlite3_bind_int(stmt, 1, id_equipo);
+
+    resultado = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+
+    return (resultado == SQLITE_DONE) ? SQLITE_OK : resultado;
 }
 
 // Participacion
