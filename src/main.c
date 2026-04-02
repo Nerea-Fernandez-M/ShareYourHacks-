@@ -17,15 +17,29 @@ GestorVentana gestores[VENTANA_COUNT] = {
 };
 
 int main() {
-    // Conexion con la db
+
+    char ruta[256];
+    getcwd(ruta, sizeof(ruta));
+    printf("Ejecutando desde: %s\n", ruta);
+    fflush(stdout);
+
     sqlite3 *db = conectarBD("shareyourhacks.db");
+    printf("BD conectada\n");
+    fflush(stdout);
     if (!db) return 1;
 
-    // Inicializar la db 
-    if (inicializarBD(db) != SQLITE_OK) {
+    printf("Inicializando BD...\n");
+    fflush(stdout);
+    int res = inicializarBD(db);
+    printf("Resultado inicializarBD: %d\n", res);
+    fflush(stdout);
+
+    if (res != SQLITE_OK) {
         desconectarBD(db);
         return 1;
     }
+    printf("Entrando al bucle\n");
+    fflush(stdout);
 
     Ventana ventana = {
         .actual        = VENTANA_MENU_MAIN,
@@ -33,9 +47,13 @@ int main() {
         .db            = db,
         .usuario       = NULL,
     };
+
     while (ventana.actual != VENTANA_EXIT) {
+        printf("Ventana actual: %d\n", ventana.actual);
+        fflush(stdout);
         gestores[ventana.actual](&ventana);
     }
+
     ventanaLimpiar(&ventana); //TODO limpieza antes de salir
     return 0;
 

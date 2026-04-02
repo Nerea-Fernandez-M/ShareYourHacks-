@@ -26,14 +26,14 @@ void ventanaLimpiar(Ventana *v) {
 void funcionalidadMenu(Ventana *v){
 
 	//Print del texto
-	printf("----Bienvenid@ a ShareYourHacks -----\n");
-	printf("1) Ver tus retos activos\n");
-	printf("2) Ver próximos retos\n");
-	printf("3) Ver todos los retos\n");
-	printf("4) Ver tu perfil\n");
-	printf("5) Ver Ranking\n");
-	printf("6) Organizar un reto\n");
-	printf("Introduce uno de los siguientes numeros para moverte por el menu:  \n");
+    printf("----Bienvenid@ a ShareYourHacks -----\n"); fflush(stdout);
+    printf("1) Ver tus retos activos\n"); fflush(stdout);
+    printf("2) Ver proximos retos\n"); fflush(stdout);
+    printf("3) Ver todos los retos\n"); fflush(stdout);
+    printf("4) Ver tu perfil\n"); fflush(stdout);
+    printf("5) Ver Ranking\n"); fflush(stdout);
+    printf("6) Organizar un reto\n"); fflush(stdout);
+    printf("Introduce un numero: "); fflush(stdout);
 
 	//Gestion de la consola
     int opcion;
@@ -60,7 +60,7 @@ void funcionalidadMenu(Ventana *v){
             v->actual = VENTANA_EXIT;
             break;
         default:
-            printf("Opcion no valida, intentalo de nuevo.\n");
+            printf("Opcion no valida, intentalo de nuevo.\n"); fflush(stdout);
             break;
     }
 }
@@ -80,12 +80,12 @@ void funcionalidadPerfil(Ventana *v){
 		obtenerPuntosOrganizacion (v->db, v->usuario->id, &puntos_organizados);
 
 		//Print del texto
-		printf("Hola %s!\n", v->usuario->nombre);
-		printf("Tu ranking: #%d\n", ranking);
-		printf("0) Para volver al menu\n");
-		printf("1) Ver tus retos activos  (%d pts)\n", puntos_activos);
-		printf("2) Ver tus retos organizados (%d pts)\n", puntos_organizados);
-		printf("Que quieres hacer:  \n");
+		printf("Hola %s!\n", v->usuario->nombre); fflush(stdout);
+		printf("Tu ranking: #%d\n", ranking); fflush(stdout);
+		printf("0) Para volver al menu\n"); fflush(stdout);
+		printf("1) Ver tus retos activos  (%d pts)\n", puntos_activos); fflush(stdout);
+		printf("2) Ver tus retos organizados (%d pts)\n", puntos_organizados); fflush(stdout);
+		printf("Que quieres hacer:  \n"); fflush(stdout);
 
 		//Gestion de la consola
 	    int opcion;
@@ -102,14 +102,14 @@ void funcionalidadPerfil(Ventana *v){
 	            v->actual = VENTANA_EXIT;
 	            break;
 	        default:
-	            printf("Opcion no valida, intentalo de nuevo.\n");
+	            printf("Opcion no valida, intentalo de nuevo.\n"); fflush(stdout);
 	            break;
 	    }
 
 	}else{ //Sesion no iniciada
 
 		//Print del texto
-		printf("Quieres iniciar sesion (1) o registrarte (2): ");
+		printf("Quieres iniciar sesion (1) o registrarte (2): "); fflush(stdout);
 
 		//Gestion de la consola
 	    int opcion;
@@ -154,7 +154,7 @@ void funcionalidadVerRetos(Ventana *v) {
 
     // Print de los retos
     if (cantidad == 0) {
-        printf("No hay retos para mostrar.\n");
+        printf("No hay retos para mostrar.\n"); fflush(stdout);
     } else {
         for (int i = 0; i < cantidad; i++) {
             printf("%d) %-40s | %s | %d pts\n",
@@ -165,9 +165,9 @@ void funcionalidadVerRetos(Ventana *v) {
         }
     }
 
-    printf("Pulsa el numero del reto cuyos datos quieras ver\n");
-    printf("Pulsa 0 para volver a la ventana anterior\n");
-    printf("Que quieres hacer: ");
+    printf("Pulsa el numero del reto cuyos datos quieras ver\n"); fflush(stdout);
+    printf("Pulsa 0 para volver a la ventana anterior\n"); fflush(stdout);
+    printf("Que quieres hacer: "); fflush(stdout);
 
     int opcion;
     scanf("%d", &opcion);
@@ -184,7 +184,7 @@ void funcionalidadVerRetos(Ventana *v) {
         return;
     }
 
-    printf("Opcion no valida, intentalo de nuevo.\n");
+    printf("Opcion no valida, intentalo de nuevo.\n"); fflush(stdout);
 }
 
 void funcionalidadReto(Ventana *v){
@@ -201,14 +201,14 @@ void funcionalidadReto(Ventana *v){
 		obtenerUsuario(v->db, reto.id_organizador, &nombre, &email);
 
 		//Prints
-		printf("%s\n",reto.titulo);
-		printf("Creado por:%s \n", nombre);
-		printf("Resumen: %s\n",reto.descripcion);
-		printf("Tipo de reto: %s\n",tipo_reto_a_string(reto.tipoReto));
-		printf("Inscripcion: %s-%s\n",reto.fecha_i_inscripcion,reto.fecha_f_inscripcion );
-		printf("Dificultad: %s\n",dificultad_reto_a_string(reto.dificultadReto));
-		printf("Puntos: %d\n",reto.puntos);
-		printf("Pulsa 1 para apuntarte o 0 para volver a la pagina anterior:  \n");
+		printf("%s\n",reto.titulo); fflush(stdout);
+		printf("Creado por:%s \n", nombre); fflush(stdout);
+		printf("Resumen: %s\n",reto.descripcion); fflush(stdout);
+		printf("Tipo de reto: %s\n",tipo_reto_a_string(reto.tipoReto)); fflush(stdout);
+		printf("Inscripcion: %s-%s\n",reto.fecha_i_inscripcion,reto.fecha_f_inscripcion ); fflush(stdout);
+		printf("Dificultad: %s\n",dificultad_reto_a_string(reto.dificultadReto)); fflush(stdout);
+		printf("Puntos: %d\n",reto.puntos); fflush(stdout);
+		printf("Pulsa 1 para apuntarte o 0 para volver a la pagina anterior:  \n"); fflush(stdout);
 
 		//Gestion navegacion
 	    int opcion;
@@ -223,7 +223,7 @@ void funcionalidadReto(Ventana *v){
 	    	    	navegar(v,VENTANA_RETO_COMPLETO);
 	    	    	break;
 		        default:
-		            printf("Opcion no valida, intentalo de nuevo.\n");
+		            printf("Opcion no valida, intentalo de nuevo.\n"); fflush(stdout);
 		            break;
 	    	    }
 	}else if(reto.estadoReto == EN_CURSO){
@@ -241,17 +241,17 @@ void funcionalidadReto(Ventana *v){
 		obtenerDiasRestantes (v->db, reto.id, &dias_restantes);
 
 		//Prints
-		printf("%s\n",reto.titulo);
-		printf("Creado por:%s \n", nombre);
-		printf("Resumen: %s\n",reto.descripcion);
-		printf("Tu rol: %s\n", tipo_rol_a_string(rol));
-		printf("Tipo de reto: %s\n",tipo_reto_a_string(reto.tipoReto));
-		printf("Tiempo restante: %d dias\n", dias_restantes);
-		printf("Tu puesto: #%d\n",  puesto);
-		printf("1) Ver detalles\n");
-		printf("2) Ver ranking del reto\n");
-		printf("0) Volver a la pantalla anterior\n");
-		printf("Que quieres hacer: \n");
+		printf("%s\n",reto.titulo); fflush(stdout);
+		printf("Creado por:%s \n", nombre); fflush(stdout);
+		printf("Resumen: %s\n",reto.descripcion); fflush(stdout);
+		printf("Tu rol: %s\n", tipo_rol_a_string(rol)); fflush(stdout);
+		printf("Tipo de reto: %s\n",tipo_reto_a_string(reto.tipoReto)); fflush(stdout);
+		printf("Tiempo restante: %d dias\n", dias_restantes); fflush(stdout);
+		printf("Tu puesto: #%d\n",  puesto); fflush(stdout);
+		printf("1) Ver detalles\n"); fflush(stdout);
+		printf("2) Ver ranking del reto\n"); fflush(stdout);
+		printf("0) Volver a la pantalla anterior\n"); fflush(stdout);
+		printf("Que quieres hacer: \n"); fflush(stdout);
 
 		//Gestion navegacion
 	    int opcion;
@@ -270,7 +270,7 @@ void funcionalidadReto(Ventana *v){
 	    	navegar(v,VENTANA_RANKING);
 	    	break;
         default:
-            printf("Opcion no valida, intentalo de nuevo.\n");
+            printf("Opcion no valida, intentalo de nuevo.\n"); fflush(stdout);
             break;
 	    }
 
@@ -288,12 +288,12 @@ void funcionalidadReto(Ventana *v){
 		obtenerRolEnReto        (v->db, v->usuario->id, reto.id, &rol);
 
 		//Prints
-		printf("%s\n",reto.titulo);
-		printf("Creado por:%s\n", nombre);
-		printf("Resumen: %s\n",reto.descripcion);
-		printf("Este reto ya ha finalizado\n");
-		printf("Tipo de reto: %s\n",tipo_reto_a_string(reto.tipoReto));
-		printf("Pulsa 1 para ver el ranking del reto o 0 para volver a la ventana anterior:  \n");
+		printf("%s\n",reto.titulo); fflush(stdout);
+		printf("Creado por:%s\n", nombre); fflush(stdout);
+		printf("Resumen: %s\n",reto.descripcion); fflush(stdout);
+		printf("Este reto ya ha finalizado\n"); fflush(stdout);
+		printf("Tipo de reto: %s\n",tipo_reto_a_string(reto.tipoReto)); fflush(stdout);
+		printf("Pulsa 1 para ver el ranking del reto o 0 para volver a la ventana anterior:  \n"); fflush(stdout);
 
 		//Gestion navegacion
 	    int opcion;
@@ -309,7 +309,7 @@ void funcionalidadReto(Ventana *v){
 	    	navegar(v,VENTANA_RANKING);
 	    	break;
         default:
-            printf("Opcion no valida, intentalo de nuevo.\n");
+            printf("Opcion no valida, intentalo de nuevo.\n"); fflush(stdout);
             break;
 	    }
 	}
@@ -331,12 +331,12 @@ void funcionalidadRetoCompleto(Ventana *v){
 	obtenerPuestoEnReto (v->db, v->usuario->id,reto.id, &puesto);
 
 	//Print del texto
-	printf("%s\n",reto.titulo);
-	printf("Creado por:%s \n", nombre);
-	printf("Resumen: %s\n",reto.descripcion);
-	printf("Tipo de reto: %s\n",tipo_reto_a_string(reto.tipoReto));
-	printf("Tu puesto: #%d\n",  puesto);
-	printf("Pulsa 1 para descargar archivos adicionales o 0 para volver al menu: ");
+	printf("%s\n",reto.titulo); fflush(stdout);
+	printf("Creado por:%s \n", nombre); fflush(stdout);
+	printf("Resumen: %s\n",reto.descripcion); fflush(stdout);
+	printf("Tipo de reto: %s\n",tipo_reto_a_string(reto.tipoReto)); fflush(stdout);
+	printf("Tu puesto: #%d\n",  puesto); fflush(stdout);
+	printf("Pulsa 1 para descargar archivos adicionales o 0 para volver al menu: "); fflush(stdout);
 
 	//Gestion de la consola
     int opcion;
@@ -348,11 +348,11 @@ void funcionalidadRetoCompleto(Ventana *v){
     	volver(v);
     	break;
     case 1:
-    	printf("No hay archivos extra para este reto");
+    	printf("No hay archivos extra para este reto"); fflush(stdout);
     	navegar(v,VENTANA_RETO);
     	break;
     default:
-        printf("Opcion no valida, intentalo de nuevo.\n");
+        printf("Opcion no valida, intentalo de nuevo.\n"); fflush(stdout);
         break;
     }
 }
@@ -363,10 +363,10 @@ void funcionalidadApuntarse(Ventana *v){
     obtenerRetoPorId(v->db, v->retoSeleccionadoId, &reto);
 
 	// Titulo del reto
-	printf("%s\n", reto.titulo);
+	printf("%s\n", reto.titulo); fflush(stdout);
 
 	// Elegir rol
-	printf("Pulsa 1 para ser Hacker o 2 para ser miembro del Staff: ");
+	printf("Pulsa 1 para ser Hacker o 2 para ser miembro del Staff: "); fflush(stdout);
 	int opcion_rol;
 	scanf("%d", &opcion_rol);
 	while (getchar() != '\n');
@@ -380,12 +380,12 @@ void funcionalidadApuntarse(Ventana *v){
 
 	// Motivacion (puede contener espacios, usamos fgets)
 	char motivacion[256];
-	printf("Escribe brevemente tu motivacion para participar en este reto: ");
+	printf("Escribe brevemente tu motivacion para participar en este reto: "); fflush(stdout);
 	fgets(motivacion, sizeof(motivacion), stdin);
 	motivacion[strcspn(motivacion, "\n")] = '\0';
 
 	// Confirmar inscripcion
-	printf("Pulsa 1 para apuntarte o 0 para volver al menu: ");
+	printf("Pulsa 1 para apuntarte o 0 para volver al menu: "); fflush(stdout);
 	int confirmar;
 	scanf("%d", &confirmar);
 	while (getchar() != '\n');
@@ -404,17 +404,18 @@ void funcionalidadApuntarse(Ventana *v){
 		int resultado = insertarParticipacion(v->db, v->usuario->id,
 											  reto.id,
 											  0, motivacion);
-		if (resultado == SQLITE_OK)
-			printf("Te has inscrito en %s correctamente.\n",reto.titulo);
-		else
-			printf("Algo ha ido mal al inscribirse, intentalo de nuevo.\n");
-
+		if (resultado == SQLITE_OK){
+			printf("Te has inscrito en %s correctamente.\n",reto.titulo); fflush(stdout);
+		}
+		else{
+			printf("Algo ha ido mal al inscribirse, intentalo de nuevo.\n"); fflush(stdout);
+		}
 		volver(v);
 		return;
 	}
 
 	// S requiere qeuipo hay que gestionarlo
-	printf("Pulsa 1 para unirte a un equipo o 2 para crear uno: ");
+	printf("Pulsa 1 para unirte a un equipo o 2 para crear uno: "); fflush(stdout);
 	int opcion_equipo;
 	scanf("%d", &opcion_equipo);
 	while (getchar() != '\n');
@@ -425,7 +426,7 @@ void funcionalidadApuntarse(Ventana *v){
 
 		// Unirse a equipo existente por nombre
 		while (1) {
-			printf("Introduce el nombre de tu equipo: ");
+			printf("Introduce el nombre de tu equipo: "); fflush(stdout);
 			char nombre_equipo[64];
 			scanf("%63s", nombre_equipo);
 			while (getchar() != '\n');
@@ -436,14 +437,12 @@ void funcionalidadApuntarse(Ventana *v){
 			if (encontrado == SQLITE_OK) {
 				int unido = unirseAEquipo(v->db, v->usuario->id, id_equipo);
 				if (unido == SQLITE_OK) {
-					printf("Te has unido al grupo %s correctamente.\n",
-						   nombre_equipo);
+					printf("Te has unido al grupo %s correctamente.\n",nombre_equipo);  fflush(stdout);
 					break;
 				}
 			}
 
-			printf("Algo ha ido mal, vuelve a introducir el nombre "
-				   "de tu equipo o pulsa 0 para salir: ");
+			printf("Algo ha ido mal, vuelve a introducir el nombre de tu equipo o pulsa 0 para salir: "); fflush(stdout);
 			int salir;
 			scanf("%d", &salir);
 			while (getchar() != '\n');
@@ -457,7 +456,7 @@ void funcionalidadApuntarse(Ventana *v){
 	} else {
 		// Crear equipo nuevo
 		while (1) {
-			printf("Introduce el nombre de tu equipo: ");
+			printf("Introduce el nombre de tu equipo: "); fflush(stdout);
 			char nombre_equipo[64];
 			scanf("%63s", nombre_equipo);
 			while (getchar() != '\n');
@@ -474,13 +473,13 @@ void funcionalidadApuntarse(Ventana *v){
 				obtenerEquipoPorNombre(v->db, nombre_equipo,
 									   reto.id,
 									   &id_equipo);
-				printf("Este es el codigo de tu equipo: %d\n", id_equipo);
+				printf("Este es el codigo de tu equipo: %d\n", id_equipo); fflush(stdout);
 
 				// Actualizar num_miembros
 				unirseAEquipo(v->db, v->usuario->id, id_equipo);
 				break;
 			}
-			printf("Este nombre no es valido, prueba con otro.\n");
+			printf("Este nombre no es valido, prueba con otro.\n"); fflush(stdout);
 		}
 	}
 
@@ -488,11 +487,12 @@ void funcionalidadApuntarse(Ventana *v){
 	int resultado = insertarParticipacion(v->db, v->usuario->id,
 										  reto.id,
 										  id_equipo, motivacion);
-	if (resultado == SQLITE_OK)
-		printf("Te has inscrito en %s correctamente.\n",reto.titulo);
-	else
-		printf("Algo ha ido mal al inscribirse, intentalo de nuevo.\n");
-
+	if (resultado == SQLITE_OK){
+		printf("Te has inscrito en %s correctamente.\n",reto.titulo); fflush(stdout);
+	}
+	else{
+		printf("Algo ha ido mal al inscribirse, intentalo de nuevo.\n"); fflush(stdout);
+	}
 	volver(v);
 }
 
@@ -507,26 +507,26 @@ void funcionalidadRanking(Ventana *v) {
 
     // Cargar datos y titulo según el tipo de ranking
     if (v->tipoRanking == RANKING_GLOBAL) {
-        printf("=== Ranking global ===\n");
+        printf("=== Ranking global ===\n"); fflush(stdout);
         listarRankingGlobal(v->db, usuarios, &cantidad);
     } else {
-        printf("=== Ranking: %s ===\n",reto.titulo);
+        printf("=== Ranking: %s ===\n",reto.titulo); fflush(stdout);
         listarRankingReto(v->db, reto.id, usuarios, &cantidad);
     }
 
     // Print del ranking
     if (cantidad == 0) {
-        printf("No hay datos para mostrar.\n");
+        printf("No hay datos para mostrar.\n"); fflush(stdout);
     } else {
         for (int i = 0; i < cantidad; i++) {
             printf("#%-3d %-30s %d pts\n",
                    i + 1,
                    usuarios[i].nombre,
-                   usuarios[i].total_puntos);
+                   usuarios[i].total_puntos);fflush(stdout);
         }
     }
 
-    printf("Pulsa 0 para volver: ");
+    printf("Pulsa 0 para volver: ");fflush(stdout);
 
     int opcion;
     scanf("%d", &opcion);
@@ -548,19 +548,19 @@ void funcionalidadOrganizarReto(Ventana *v) {
     int  puntos = 0;
     int limite_de_plazas = 0;
 
-    printf("Introduce los siguientes datos de tu reto\n");
+    printf("Introduce los siguientes datos de tu reto\n");fflush(stdout);
 
-    printf("Titulo del reto: \n");
+    printf("Titulo del reto: \n");fflush(stdout);
     fgets(titulo, sizeof(titulo), stdin);
     titulo[strcspn(titulo, "\n")] = '\0';
 
-    printf("Resumen: \n");
+    printf("Resumen: \n");fflush(stdout);
     fgets(resumen, sizeof(resumen), stdin);
     resumen[strcspn(resumen, "\n")] = '\0';
 
     // Tipo: hace la validacion previa
     while (1) {
-        printf("Tipo (CTF / HACKATHON): \n");
+        printf("Tipo (CTF / HACKATHON): \n");fflush(stdout);
         scanf("%15s", tipo);
         while (getchar() != '\n');
 
@@ -571,30 +571,30 @@ void funcionalidadOrganizarReto(Ventana *v) {
         if (strcmp(tipo, "CTF") == 0 || strcmp(tipo, "HACKATHON") == 0)
             break;
 
-        printf("Tipo no valido, escribe CTF o HACKATHON.\n");
+        printf("Tipo no valido, escribe CTF o HACKATHON.\n");fflush(stdout);
     }
 
-    printf("Escribe las siguientes fechas en formato (dd/mm/aaaa)\n");
+    printf("Escribe las siguientes fechas en formato (dd/mm/aaaa)\n");fflush(stdout);
 
-    printf("Inicio inscripcion: \n");
+    printf("Inicio inscripcion: \n");fflush(stdout);
     scanf("%10s", fecha_inicio_insc);
     while (getchar() != '\n');
 
-    printf("Fin inscripcion: \n");
+    printf("Fin inscripcion: \n");fflush(stdout);
     scanf("%10s", fecha_fin_insc);
     while (getchar() != '\n');
 
-    printf("Inicio reto: \n");
+    printf("Inicio reto: \n");fflush(stdout);
     scanf("%10s", fecha_inicio);
     while (getchar() != '\n');
 
-    printf("Fin reto: \n");
+    printf("Fin reto: \n");fflush(stdout);
     scanf("%10s", fecha_fin);
     while (getchar() != '\n');
 
     // Dificultad: Hace la validacion previa
     while (1) {
-        printf("Dificultad (FACIL / MEDIO / DIFICIL): \n");
+        printf("Dificultad (FACIL / MEDIO / DIFICIL): \n");fflush(stdout);
         scanf("%15s", dificultad);
         while (getchar() != '\n');
 
@@ -606,19 +606,19 @@ void funcionalidadOrganizarReto(Ventana *v) {
             strcmp(dificultad, "DIFICIL") == 0)
             break;
 
-        printf("Dificultad no valida, escribe FACIL, MEDIO o DIFICIL.\n");
+        printf("Dificultad no valida, escribe FACIL, MEDIO o DIFICIL.\n");fflush(stdout);
     }
 
-    printf("Puntos: \n");
+    printf("Puntos: \n");fflush(stdout);
     scanf("%d", &puntos);
     while (getchar() != '\n');
 
-    printf("Limite de plazas: \n");
+    printf("Limite de plazas: \n");fflush(stdout);
     scanf("%d", &limite_de_plazas);
     while (getchar() != '\n');
 
     // Confirmar
-    printf("Para crear el reto pulsa 1, para volver al menu pulsa 0: \n");
+    printf("Para crear el reto pulsa 1, para volver al menu pulsa 0: \n");fflush(stdout);
     int confirmar;
     scanf("%d", &confirmar);
     while (getchar() != '\n');
@@ -633,11 +633,11 @@ void funcionalidadOrganizarReto(Ventana *v) {
                                  fecha_inicio, fecha_fin,
                                  fecha_inicio_insc, fecha_fin_insc,
                                  puntos, v->usuario->id);
-    if (resultado == SQLITE_OK)
-        printf("Reto \"%s\" creado correctamente.\n", titulo);
-    else
-        printf("Algo ha ido mal al crear el reto, intentalo de nuevo.\n");
-
+    if (resultado == SQLITE_OK){
+        printf("Reto \"%s\" creado correctamente.\n", titulo);fflush(stdout);
+    }else{
+        printf("Algo ha ido mal al crear el reto, intentalo de nuevo.\n");fflush(stdout);
+	}
     volver(v);
 }
 
@@ -650,11 +650,11 @@ void iniciarSesion(Ventana *v) {
 
     while (1) {
         // Pedir credenciales
-        printf("Nombre de usuario: ");
+        printf("Nombre de usuario: ");fflush(stdout);
         scanf("%63s", nombre);
         while (getchar() != '\n');
 
-        printf("Contrasena: ");
+        printf("Contrasena: ");fflush(stdout);
         scanf("%127s", contrasena);
         while (getchar() != '\n');
 
@@ -676,8 +676,8 @@ void iniciarSesion(Ventana *v) {
         }
 
         // Credenciales incorrectas
-        printf("Nombre de usuario o contrasena incorrectos\n");
-        printf("Pulsa 1 para intentarlo de nuevo o 0 para volver: ");
+        printf("Nombre de usuario o contrasena incorrectos\n"); fflush(stdout);
+        printf("Pulsa 1 para intentarlo de nuevo o 0 para volver: ");fflush(stdout);
 
         int opcion;
         scanf("%d", &opcion);
@@ -699,25 +699,25 @@ void registrar(Ventana *v) {
     char contrasena2[128];
 
     while (1) {
-        printf("Correo electronico: ");
+        printf("Correo electronico: ");fflush(stdout);
         scanf("%127s", email);
         while (getchar() != '\n');
 
-        printf("Nombre de usuario: ");
+        printf("Nombre de usuario: ");fflush(stdout);
         scanf("%63s", nombre);
         while (getchar() != '\n');
 
-        printf("Contrasena: ");
+        printf("Contrasena: ");fflush(stdout);
         scanf("%127s", contrasena);
         while (getchar() != '\n');
 
-        printf("Repetir contrasena: ");
+        printf("Repetir contrasena: ");fflush(stdout);
         scanf("%127s", contrasena2);
         while (getchar() != '\n');
 
         // Validar que las contraseñas coinciden
         if (strcmp(contrasena, contrasena2) != 0) {
-            printf("Las contrasenas no coinciden, intentalo de nuevo.\n\n");
+            printf("Las contrasenas no coinciden, intentalo de nuevo.\n\n"); fflush(stdout);
             continue;
         }
 
@@ -740,6 +740,6 @@ void registrar(Ventana *v) {
         }
 
         // Error en la BD (nombre o email duplicado, u otro error)
-        printf("No se ha podido registrar el usuario, intentalo de nuevo.\n\n");
+        printf("No se ha podido registrar el usuario, intentalo de nuevo.\n\n"); fflush(stdout);
     }
 }

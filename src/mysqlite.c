@@ -1,4 +1,5 @@
 #include "mysqlite.h"
+#include <direct.h>
 
 // Conexion con la db
 sqlite3* conectarBD(const char *nombreBD) {
@@ -28,6 +29,10 @@ void desconectarBD(sqlite3 *db) {
 int inicializarBD(sqlite3 *db) {
     char *errMsg = NULL;
     
+    char ruta[256];
+    if (getcwd(ruta, sizeof(ruta)) != NULL)
+        printf("Directorio actual: %s\n", ruta);
+
     // Leer el contenido de init.sql
     FILE *archivo = fopen("init.sql", "r");
     if (!archivo) {
