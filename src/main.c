@@ -49,8 +49,6 @@ int main() {
     };
 
     while (ventana.actual != VENTANA_EXIT) {
-        printf("Ventana actual: %d\n", ventana.actual);
-        fflush(stdout);
         gestores[ventana.actual](&ventana);
     }
 

@@ -42,10 +42,22 @@ void funcionalidadMenu(Ventana *v){
 
     //Llamada a navegar
     switch (opcion) {
-        case 1: case 2: case 3:
-            v->filtro = opcion;
-            navegar(v, VENTANA_VER_RETOS);
-            break;
+		case 1:
+		    if (v->usuario == NULL) {
+		        printf("Debes iniciar sesion para ver tus retos activos.\n");
+		        break;
+		    }
+		    v->filtro = FILTRO_ACTIVOS_USUARIO;
+		    navegar(v, VENTANA_VER_RETOS);
+		    break;
+		case 2:
+			v->filtro = FILTRO_ACTIVOS;
+			navegar(v, VENTANA_VER_RETOS);
+			break;
+		case 3:
+			v->filtro = FILTRO_TODOS;
+			navegar(v, VENTANA_VER_RETOS);
+			break;
         case 4:
             navegar(v, VENTANA_PERFIL);
             break;
@@ -94,10 +106,14 @@ void funcionalidadPerfil(Ventana *v){
 
 		//Llamada a navegar
 	    switch (opcion) {
-	        case 1: case 2:
-	            v->filtro = opcion;
-	            navegar(v, VENTANA_VER_RETOS);
-	            break;
+	    case 1:
+	        v->filtro = FILTRO_ACTIVOS_USUARIO;
+	        navegar(v, VENTANA_VER_RETOS);
+	        break;
+	    case 2:
+	        v->filtro = FILTRO_ORGANIZADOS_USUARIO;
+			navegar(v, VENTANA_VER_RETOS);
+			break;
 	        case 0:
 	            v->actual = VENTANA_EXIT;
 	            break;
@@ -157,11 +173,11 @@ void funcionalidadVerRetos(Ventana *v) {
         printf("No hay retos para mostrar.\n"); fflush(stdout);
     } else {
         for (int i = 0; i < cantidad; i++) {
-            printf("%d) %-40s | %s | %d pts\n",
-                   i + 1,
-                   retos[i].titulo,
-                   retos[i].estadoReto,
-                   retos[i].puntos);
+        	printf("%d) %-40s | %s | %d pts\n",
+        	       i + 1,
+        	       retos[i].titulo,
+        	       estado_reto_a_string(retos[i].estadoReto),
+        	       retos[i].puntos);
         }
     }
 
@@ -741,5 +757,15 @@ void registrar(Ventana *v) {
 
         // Error en la BD (nombre o email duplicado, u otro error)
         printf("No se ha podido registrar el usuario, intentalo de nuevo.\n\n"); fflush(stdout);
+    }
+}
+
+//Funciones auxiliares conversion de enums
+const char *estado_reto_a_string(EstadoReto estado) {
+    switch (estado) {
+        case EN_CURSO:   return "EN_CURSO";
+        case FINALIZADO: return "FINALIZADO";
+        case SIN_COMENZAR:
+        default:         return "SIN_COMENZAR";
     }
 }

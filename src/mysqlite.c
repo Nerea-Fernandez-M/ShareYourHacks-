@@ -406,9 +406,31 @@ int listarTodosRetos(sqlite3 *db, Reto *retos_out, int *cantidad_out) {
 
     int count = 0;
     while (sqlite3_step(stmt) == SQLITE_ROW && count < MAX_RETOS) {
+    	//Posibles problemas
+    	const unsigned char *txt;
+
+    	// TÍTULO
+    	txt = sqlite3_column_text(stmt, 1);
+    	if (txt != NULL) {
+    	    snprintf(retos_out[count].titulo,
+    	             sizeof(retos_out[count].titulo),
+    	             "%s", txt);
+    	} else {
+    	    retos_out[count].titulo[0] = '\0';
+    	}
+
+    	// DESCRIPCIÓN
+    	txt = sqlite3_column_text(stmt, 2);
+    	if (txt != NULL) {
+    	    snprintf(retos_out[count].descripcion,
+    	             sizeof(retos_out[count].descripcion),
+    	             "%s", txt);
+    	} else {
+    	    retos_out[count].descripcion[0] = '\0';
+    	}
+
+    	//General
         retos_out[count].id = sqlite3_column_int(stmt, 0);
-        strncpy(retos_out[count].titulo, (char *)sqlite3_column_text(stmt, 1), 127);
-        strncpy(retos_out[count].descripcion, (char *)sqlite3_column_text(stmt, 2), 511);
         retos_out[count].dificultadReto = string_a_dificultad((char *)sqlite3_column_text(stmt, 3));
         retos_out[count].estadoReto= string_a_estado_reto((char *)sqlite3_column_text(stmt, 4));
         retos_out[count].puntos = sqlite3_column_int(stmt, 5);
@@ -434,9 +456,30 @@ int listarRetosActivos(sqlite3 *db, Reto *retos_out, int *cantidad_out) {
 
     int count = 0;
     while (sqlite3_step(stmt) == SQLITE_ROW && count < MAX_RETOS) {
+
+    	const unsigned char *txt;
+
+    	// TÍTULO
+    	txt = sqlite3_column_text(stmt, 1);
+    	if (txt != NULL) {
+    	    snprintf(retos_out[count].titulo,
+    	             sizeof(retos_out[count].titulo),
+    	             "%s", txt);
+    	} else {
+    	    retos_out[count].titulo[0] = '\0';
+    	}
+
+    	// DESCRIPCIÓN
+    	txt = sqlite3_column_text(stmt, 2);
+    	if (txt != NULL) {
+    	    snprintf(retos_out[count].descripcion,
+    	             sizeof(retos_out[count].descripcion),
+    	             "%s", txt);
+    	} else {
+    	    retos_out[count].descripcion[0] = '\0';
+    	}
+
         retos_out[count].id     = sqlite3_column_int(stmt, 0);
-        strncpy(retos_out[count].titulo, (char *)sqlite3_column_text(stmt, 1), 127);
-        strncpy(retos_out[count].descripcion, (char *)sqlite3_column_text(stmt, 2), 511);
         retos_out[count].dificultadReto = string_a_dificultad((char *)sqlite3_column_text(stmt, 3));
         retos_out[count].estadoReto= string_a_estado_reto((char *)sqlite3_column_text(stmt, 4));
         retos_out[count].puntos = sqlite3_column_int(stmt, 5);
@@ -466,9 +509,31 @@ int listarRetosUsuario(sqlite3 *db, int id_usuario, Reto *retos_out, int *cantid
 
     int count = 0;
     while (sqlite3_step(stmt) == SQLITE_ROW && count < MAX_RETOS) {
+
+
+    	const unsigned char *txt;
+
+    	// TÍTULO
+    	txt = sqlite3_column_text(stmt, 1);
+    	if (txt != NULL) {
+    	    snprintf(retos_out[count].titulo,
+    	             sizeof(retos_out[count].titulo),
+    	             "%s", txt);
+    	} else {
+    	    retos_out[count].titulo[0] = '\0';
+    	}
+
+    	// DESCRIPCIÓN
+    	txt = sqlite3_column_text(stmt, 2);
+    	if (txt != NULL) {
+    	    snprintf(retos_out[count].descripcion,
+    	             sizeof(retos_out[count].descripcion),
+    	             "%s", txt);
+    	} else {
+    	    retos_out[count].descripcion[0] = '\0';
+    	}
+
         retos_out[count].id  = sqlite3_column_int(stmt, 0);
-        strncpy(retos_out[count].titulo,(char *)sqlite3_column_text(stmt, 1), 127);
-        strncpy(retos_out[count].descripcion, (char *)sqlite3_column_text(stmt, 2), 511);
         retos_out[count].dificultadReto = string_a_dificultad((char *)sqlite3_column_text(stmt, 3));
         retos_out[count].estadoReto = string_a_estado_reto((char *)sqlite3_column_text(stmt, 4));
         retos_out[count].puntos = sqlite3_column_int(stmt, 5);
@@ -498,9 +563,31 @@ int listarRetosActivosUsuario(sqlite3 *db, int id_usuario, Reto *retos_out, int 
 
     int count = 0;
     while (sqlite3_step(stmt) == SQLITE_ROW && count < MAX_RETOS) {
+
+
+    	const unsigned char *txt;
+
+    	// TÍTULO
+    	txt = sqlite3_column_text(stmt, 1);
+    	if (txt != NULL) {
+    	    snprintf(retos_out[count].titulo,
+    	             sizeof(retos_out[count].titulo),
+    	             "%s", txt);
+    	} else {
+    	    retos_out[count].titulo[0] = '\0';
+    	}
+
+    	// DESCRIPCIÓN
+    	txt = sqlite3_column_text(stmt, 2);
+    	if (txt != NULL) {
+    	    snprintf(retos_out[count].descripcion,
+    	             sizeof(retos_out[count].descripcion),
+    	             "%s", txt);
+    	} else {
+    	    retos_out[count].descripcion[0] = '\0';
+    	}
+
         retos_out[count].id  = sqlite3_column_int(stmt, 0);
-        strncpy(retos_out[count].titulo, (char *)sqlite3_column_text(stmt, 1), 127);
-        strncpy(retos_out[count].descripcion, (char *)sqlite3_column_text(stmt, 2), 511);
         retos_out[count].dificultadReto = string_a_dificultad((char *)sqlite3_column_text(stmt, 3));
         retos_out[count].estadoReto = string_a_estado_reto((char *)sqlite3_column_text(stmt, 4));
         retos_out[count].puntos = sqlite3_column_int(stmt, 5);
@@ -528,9 +615,30 @@ int listarRetosOrganizadosUsuario(sqlite3 *db, int id_usuario, Reto *retos_out, 
 
     int count = 0;
     while (sqlite3_step(stmt) == SQLITE_ROW && count < MAX_RETOS) {
+
+    	const unsigned char *txt;
+
+    	// TÍTULO
+    	txt = sqlite3_column_text(stmt, 1);
+    	if (txt != NULL) {
+    	    snprintf(retos_out[count].titulo,
+    	             sizeof(retos_out[count].titulo),
+    	             "%s", txt);
+    	} else {
+    	    retos_out[count].titulo[0] = '\0';
+    	}
+
+    	// DESCRIPCIÓN
+    	txt = sqlite3_column_text(stmt, 2);
+    	if (txt != NULL) {
+    	    snprintf(retos_out[count].descripcion,
+    	             sizeof(retos_out[count].descripcion),
+    	             "%s", txt);
+    	} else {
+    	    retos_out[count].descripcion[0] = '\0';
+    	}
+
         retos_out[count].id     = sqlite3_column_int(stmt, 0);
-        strncpy(retos_out[count].titulo,      (char *)sqlite3_column_text(stmt, 1), 127);
-        strncpy(retos_out[count].descripcion, (char *)sqlite3_column_text(stmt, 2), 511);
         retos_out[count].dificultadReto = string_a_dificultad((char *)sqlite3_column_text(stmt, 3));
         retos_out[count].estadoReto = string_a_estado_reto((char *)sqlite3_column_text(stmt, 4));
         retos_out[count].puntos = sqlite3_column_int(stmt, 5);
