@@ -19,14 +19,14 @@ void volver(Ventana *v) {
 void funcionalidadMenu(Ventana *v){
 
 	//Print del texto
-	"----Bienvenid@ a ShareYourHacks -----\n"
-	"1) Ver tus retos activos\n"
-	"2) Ver próximos retos\n"
-	"3) Ver todos los retos\n"
-	"4) Ver tu perfil\n"
-	"5) Ver Ranking\n"
-	"6) Organizar un reto\n"
-	"Introduce uno de los siguientes numeros para moverte por el menu:  \n"
+	printf("----Bienvenid@ a ShareYourHacks -----\n");
+	printf("1) Ver tus retos activos\n");
+	printf("2) Ver próximos retos\n");
+	printf("3) Ver todos los retos\n");
+	printf("4) Ver tu perfil\n");
+	printf("5) Ver Ranking\n");
+	printf("6) Organizar un reto\n");
+	printf("Introduce uno de los siguientes numeros para moverte por el menu:  \n");
 
 	//Gestion de la consola
     int opcion;
@@ -61,13 +61,23 @@ void funcionalidadPerfil(Ventana *v){
 
 	//Sesion iniciada
 	if (v->usuario != NULL){
+
+		//Llamadas a la BD
+		int ranking            = 0;
+		int puntos_activos     = 0;
+		int puntos_organizados = 0;
+
+		obtenerRankingUsuario     (v->db, v->usuario->id, &ranking);
+		obtenerPuntosParticipacion(v->db, v->usuario->id, &puntos_activos);
+		obtenerPuntosOrganizacion (v->db, v->usuario->id, &puntos_organizados);
+
 		//Print del texto
-		"Hola nombre!\n" //TODO introucir datos de la BD
-		"Tu ranking: \n"
-		"0) Para volver al menu"
-		"1) Ver tus retos activos  (x pts)\n"
-		"2) Ver tus retos organizados (x pts)\n"
-		"Que quieres hacer:  \n"
+		printf("Hola %s!\n", v->usuario->nombre);
+		printf("Tu ranking: #%d\n", ranking);
+		printf("0) Para volver al menu\n");
+		printf("1) Ver tus retos activos  (%d pts)\n", puntos_activos);
+		printf("2) Ver tus retos organizados (%d pts)\n", puntos_organizados);
+		printf("Que quieres hacer:  \n");
 
 		//Gestion de la consola
 	    int opcion;
@@ -76,7 +86,7 @@ void funcionalidadPerfil(Ventana *v){
 
 		//Llamada a navegar
 	    switch (opcion) {
-	        case 1: case 2: //Todo cambiar opcion de retos organizados
+	        case 1: case 2:
 	            v->filtro = opcion;
 	            navegar(v, VENTANA_VER_RETOS);
 	            break;
@@ -91,7 +101,7 @@ void funcionalidadPerfil(Ventana *v){
 	}else{ //Sesion no iniciada
 
 		//Print del texto
-		"Quieres iniciar sesion (1) o registrarte (2): "
+		printf("Quieres iniciar sesion (1) o registrarte (2): ");
 
 		//Gestion de la consola
 	    int opcion;
@@ -102,45 +112,71 @@ void funcionalidadPerfil(Ventana *v){
 	    switch(opcion){
 	    case 1:
 	    	iniciarSesion(v);
+	    	break;
 	    case 2:
 	    	registrar(v);
+	    	break;
 	    }
 	}
 }
 
-void funcionalidadVerRetos(Ventana *v){
+void funcionalidadVerRetos(Ventana *v) {
 
-	//Hacer query a la BD
+    Reto retos[MAX_RETOS];
+    int  cantidad = 0;
 
-	//Print del texto
-	“Print de los retos correspondientes”
-	"Pulsa el numero de el reto cuyos datos quieras ver\n"
-	"Pulsa 0 para volver a la ventana anterior\n"
-	"Que quieres hacer:  \n"
+    // Seleccionar la query según el filtro
+    switch (v->filtro) {
+        case FILTRO_TODOS:
+            listarTodosRetos(v->db, retos, &cantidad);
+            break;
+        case FILTRO_ACTIVOS:
+            listarRetosActivos(v->db, retos, &cantidad);
+            break;
+        case FILTRO_USUARIO:
+            listarRetosUsuario(v->db, v->usuario->id, retos, &cantidad);
+            break;
+        case FILTRO_ACTIVOS_USUARIO:
+            listarRetosActivosUsuario(v->db, v->usuario->id, retos, &cantidad);
+            break;
+        case FILTRO_ORGANIZADOS_USUARIO:
+            listarRetosOrganizadosUsuario(v->db, v->usuario->id, retos, &cantidad);
+            break;
+    }
 
-	//Gestion de la consola
+    // Print de los retos
+    if (cantidad == 0) {
+        printf("No hay retos para mostrar.\n");
+    } else {
+        for (int i = 0; i < cantidad; i++) {
+            printf("%d) %-40s | %s | %d pts\n",
+                   i + 1,
+                   retos[i].titulo,
+                   retos[i].estadoReto,
+                   retos[i].puntos);
+        }
+    }
+
+    printf("Pulsa el numero del reto cuyos datos quieras ver\n");
+    printf("Pulsa 0 para volver a la ventana anterior\n");
+    printf("Que quieres hacer: ");
+
     int opcion;
     scanf("%d", &opcion);
-    while (getchar() != '\n'); //Evita errores
+    while (getchar() != '\n');
 
-	//Llamada a navegar
-    if (opcion == 0) { //Vuelve para atras
-        db_free_retos(retos);
+    if (opcion == 0) {
         volver(v);
         return;
     }
 
-    //Navega por los retos
-    if (opcion >= 1 && opcion <= cantidad) { //n de retos obtenidos
-        v->reto_seleccionado_id = retos[opcion - 1].id;  // guardas el id antes de liberar
-        db_free_retos(retos);
+    if (opcion >= 1 && opcion <= cantidad) {
+        v->retoSeleccionado = retos[opcion - 1].id;
         navegar(v, VENTANA_RETO);
         return;
     }
 
-    // Opcion no valida: liberar y volver a mostrar la misma ventana
     printf("Opcion no valida, intentalo de nuevo.\n");
-    db_free_retos(retos);
 }
 
 void funcionalidadReto(Ventana *v){
@@ -190,10 +226,10 @@ void funcionalidadOrganizarReto(Ventana *v){
 
 
 //Funciones suplementarias
-void iniciarSesion(Ventana *v){
+void iniciarSesion(Ventana *v) {
 
     char nombre[64];
-    char password[128];
+    char contrasena[128];
 
     while (1) {
         // Pedir credenciales
@@ -202,15 +238,22 @@ void iniciarSesion(Ventana *v){
         while (getchar() != '\n');
 
         printf("Contrasena: ");
-        scanf("%127s", password);
+        scanf("%127s", contrasena);
         while (getchar() != '\n');
 
         // Consultar la BD
-        Usuario *usuario = db_get_usuario(nombre, password);
+        int id     = 0;
+        int puntos = 0;
+        int resultado = obtenerUsuarioPorCredenciales(v->db, nombre, contrasena,
+                                                      &id, &puntos);
 
-        if (usuario != NULL) {
-            // Credenciales correctas
-            v->usuario = usuario;  // guardas el usuario en la ventana
+        if (resultado == SQLITE_OK) {
+            // Credenciales correctas, rellenar el usuario en la ventana
+            v->usuario = malloc(sizeof(Usuario));
+            v->usuario->id          = id;
+            v->usuario->total_puntos = puntos;
+            strncpy(v->usuario->nombre, nombre, sizeof(v->usuario->nombre) - 1);
+
             navegar(v, VENTANA_PERFIL);
             return;
         }
@@ -231,7 +274,8 @@ void iniciarSesion(Ventana *v){
     }
 }
 
-void registrar(Ventana *v){
+void registrar(Ventana *v) {
+
     char email[128];
     char nombre[64];
     char contrasena[128];
@@ -270,7 +314,7 @@ void registrar(Ventana *v){
             obtenerUsuarioPorCredenciales(v->db, nombre, contrasena, &id, &puntos);
 
             v->usuario = malloc(sizeof(Usuario));
-            v->usuario->id     = id;
+            v->usuario->id           = id;
             v->usuario->total_puntos = puntos;
             strncpy(v->usuario->nombre, nombre, sizeof(v->usuario->nombre) - 1);
 

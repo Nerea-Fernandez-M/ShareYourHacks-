@@ -17,6 +17,16 @@ typedef enum {
     VENTANA_COUNT
 } TipoVentana;
 
+typedef enum {
+    FILTRO_TODOS,
+    FILTRO_ACTIVOS,
+    FILTRO_USUARIO,
+    FILTRO_ACTIVOS_USUARIO,
+    FILTRO_PARTICIPACION_USUARIO,
+    FILTRO_ORGANIZADOS_USUARIO,
+} FiltroRetos;
+#define MAX_RETOS 128 //para visualizar retos
+
 typedef struct{
     TipoVentana actual;
     TipoVentana historial[16];
@@ -24,7 +34,7 @@ typedef struct{
     Usuario *usuario;
     sqlite3     *db;
     Reto *retoSeleccionado;
-    int filtro;
+    FiltroRetos  filtro;
 } Ventana;
 
 void navegar(Ventana *v, TipoVentana destino);
