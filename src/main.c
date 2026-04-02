@@ -29,7 +29,7 @@ int main() {
 
     Ventana ventana = {
         .actual        = VENTANA_MENU_MAIN,
-        .historial_top = 0,
+        .historialTop = 0,
         .db            = db,
         .usuario       = NULL,
     };

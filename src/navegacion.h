@@ -2,6 +2,8 @@
 #define NAVEGACION_H_
 
 #include "estructuras.h"
+#define MAX_RETOS 128 //para visualizar retos
+#define MAX_USUARIOS 128 //para visaulizar el ranking
 
 //Gestion ventanas
 typedef enum {
@@ -25,7 +27,12 @@ typedef enum {
     FILTRO_PARTICIPACION_USUARIO,
     FILTRO_ORGANIZADOS_USUARIO,
 } FiltroRetos;
-#define MAX_RETOS 128 //para visualizar retos
+
+typedef enum {
+    RANKING_GLOBAL,
+    RANKING_RETO,
+    RANKING_COUNT
+} TipoRanking;
 
 typedef struct{
     TipoVentana actual;
@@ -33,10 +40,12 @@ typedef struct{
     int historialTop;
     Usuario *usuario;
     sqlite3     *db;
-    Reto *retoSeleccionado;
+    int retoSeleccionadoId;
     FiltroRetos  filtro;
+    TipoRanking  tipoRanking;
 } Ventana;
 
+//Funciones de gestion
 void navegar(Ventana *v, TipoVentana destino);
 void volver(Ventana *v);
 void ventanaLimpiar(Ventana *v);

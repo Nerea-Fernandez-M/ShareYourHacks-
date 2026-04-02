@@ -4,8 +4,11 @@
 #include "sqlite3.h"
 #include <stdio.h>
 #include <string.h>
+#include "estructuras.h"
+#include "navegacion.h"
 
 #define MAX_RETOS 128 //para visualizar retos
+#define MAX_USUARIOS 128 //para visualizar el ranking
 
 // Conexion con la db
 sqlite3* conectarBD(const char *nombreBD);
@@ -50,6 +53,8 @@ int obtenerPuntosOrganizacion  (sqlite3 *db, int id_usuario, int *puntos_out);
 int obtenerRolEnReto        (sqlite3 *db, int id_usuario, int id_reto, TipoRol *rol_out);
 int obtenerPuestoEnReto     (sqlite3 *db, int id_usuario, int id_reto, int *puesto_out);
 int obtenerDiasRestantes    (sqlite3 *db, int id_reto, int *dias_out);
+	//funcion gestionar puntero de ventana
+int obtenerRetoPorId(sqlite3 *db, int id, Reto *reto_out);
 
 // Equipos
 int insertarEquipo(sqlite3 *db, const char *nombre, int id_reto, const char *ids_usuarios);
@@ -62,6 +67,11 @@ int obtenerEquipoPorNombre(sqlite3 *db, const char *nombre, int id_reto,
                             int *id_equipo_out);
 int unirseAEquipo        (sqlite3 *db, int id_usuario, int id_equipo);
 
+//Funciones para el ranking
+int listarRankingGlobal(sqlite3 *db, Usuario *usuarios_out, int *cantidad_out);
+int listarRankingReto  (sqlite3 *db, int id_reto,
+                         Usuario *usuarios_out, int *cantidad_out);
+
 // Participaciones
 int insertarParticipacion(sqlite3 *db, int id_usuario, int id_reto, 
                           int id_equipo, const char *motivacion);
@@ -70,5 +80,10 @@ int listarParticipacionesPorUsuario(sqlite3 *db, int id_usuario);
 int listarParticipacionesPorReto(sqlite3 *db, int id_reto);
 int actualizarEstadoParticipacion(sqlite3 *db, int id, const char *nuevo_estado);
 int actualizarPuntosParticipacion(sqlite3 *db, int id, int puntos);
+
+//Funciones auxiliares conversion de enums
+static DificultadReto string_a_dificultad(const char *str);
+static TipoReto string_a_tipo_reto(const char *str);
+static EstadoReto string_a_estado_reto(const char *str);
 
 #endif
