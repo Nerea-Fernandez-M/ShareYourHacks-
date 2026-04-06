@@ -26,7 +26,7 @@ void ventanaLimpiar(Ventana *v) {
 void funcionalidadMenu(Ventana *v){
 
 	//Print del texto
-    printf("----Bienvenid@ a ShareYourHacks -----\n"); fflush(stdout);
+    printf("---- Bienvenid@ a ShareYourHacks -----\n"); fflush(stdout);
     printf("1) Ver tus retos activos\n"); fflush(stdout);
     printf("2) Ver proximos retos\n"); fflush(stdout);
     printf("3) Ver todos los retos\n"); fflush(stdout);
@@ -114,12 +114,12 @@ void funcionalidadPerfil(Ventana *v){
 	        v->filtro = FILTRO_ORGANIZADOS_USUARIO;
 			navegar(v, VENTANA_VER_RETOS);
 			break;
-	        case 0:
-	            v->actual = VENTANA_EXIT;
-	            break;
-	        default:
-	            printf("Opcion no valida, intentalo de nuevo.\n"); fflush(stdout);
-	            break;
+		case 0:
+			volver(v);
+			break;
+		default:
+			printf("Opcion no valida, intentalo de nuevo.\n"); fflush(stdout);
+			break;
 	    }
 
 	}else{ //Sesion no iniciada
