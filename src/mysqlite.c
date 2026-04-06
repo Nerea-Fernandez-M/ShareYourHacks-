@@ -26,7 +26,7 @@ void desconectarBD(sqlite3 *db) {
     }
 }
 
-int inicializarBD(sqlite3 *db) {
+int inicializarBD(sqlite3 *db, const char* ruta_init) {
     char *errMsg = NULL;
     
     char ruta[256];
@@ -36,7 +36,7 @@ int inicializarBD(sqlite3 *db) {
     // Leer el contenido de init.sql
     FILE *archivo = fopen("init.sql", "r");
     if (!archivo) {
-        printf("Error: No se encontró init.sql\n");
+        printf("Error: No se encontró el archivo de inivializacion: %s\n", ruta_init);
         return 1;
     }
     
