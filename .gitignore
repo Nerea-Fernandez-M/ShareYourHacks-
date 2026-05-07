@@ -1,1 +1,10 @@
-/Debug/
+# Ignorar carpetas de configuración de Eclipse
+.metadata/
+.settings/
+.project
+.cproject
+# Ignorar binarios y archivos temporales
+Debug/
+Release/
+*.o
+*.db

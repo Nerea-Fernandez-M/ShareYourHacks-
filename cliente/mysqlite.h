@@ -13,7 +13,7 @@
 // Conexion con la db
 sqlite3* conectarBD(const char *nombreBD);
 void desconectarBD(sqlite3 *db);
-int inicializarBD(sqlite3 *db, const char* ruta_init);
+int inicializarBD(sqlite3 *db);
 
 // Roles
 int insertarRol(sqlite3 *db, const char *nombre, const char *descripcion);

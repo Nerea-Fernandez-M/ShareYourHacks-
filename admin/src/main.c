@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "mysqlite.h"
 #include "navegacion.h"
-#include "config.h"
 
 typedef void (*GestorVentana)(Ventana *ventana);
 
@@ -24,27 +23,14 @@ int main() {
     printf("Ejecutando desde: %s\n", ruta);
     fflush(stdout);
 
-    // Config
-	Config miConfig;
-	if (cargarConfig("config.ini", &miConfig) != 0) {
-		printf("Error! no se pudo leer el config.ini\n");
-		return 1;
-	}
-
-	printf("Iniciando sesion para el admin: %s\n", miConfig.admin_user);
-
-
-
-
-
-    sqlite3 *db = conectarBD(miConfig.nombre_db);
+    sqlite3 *db = conectarBD("shareyourhacks.db");
     printf("BD conectada\n");
     fflush(stdout);
     if (!db) return 1;
 
     printf("Inicializando BD...\n");
     fflush(stdout);
-    int res = inicializarBD(db, miConfig.ruta_init);
+    int res = inicializarBD(db);
     printf("Resultado inicializarBD: %d\n", res);
     fflush(stdout);
 
@@ -68,8 +54,5 @@ int main() {
 
     ventanaLimpiar(&ventana); //TODO limpieza antes de salir
     return 0;
-
-
-
 
 }
