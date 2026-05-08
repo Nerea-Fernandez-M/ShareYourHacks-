@@ -6,3 +6,4 @@
  */
 
 
+//Tiene que hacer las llamadas al socket del servidor en lugar de a la BD
