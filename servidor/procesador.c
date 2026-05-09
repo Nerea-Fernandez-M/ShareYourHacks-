@@ -208,6 +208,71 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
         send(comm_socket, sendBuff, sizeof(sendBuff), 0);
     }
 
+    // ---- GET_USUARIO ----
+    else if (strcmp(comando, "GET_USUARIO") == 0) {
+
+        char id_str[16];
+        recv(comm_socket, id_str, sizeof(id_str), 0);
+        recv(comm_socket, recvBuff, sizeof(recvBuff), 0); // GET_USUARIO-END
+
+        char nombre[30] = "";
+        char email[50]  = "";
+        int res = obtenerUsuario(db, atoi(id_str), nombre, email);
+
+        if (res == SQLITE_OK)
+            sprintf(sendBuff, "OK|%s|%s", nombre, email);
+        else
+            strcpy(sendBuff, "ERROR");
+
+        send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+    }
+
+    // ---- RETO_REQUIERE_EQUIPO ----
+    else if (strcmp(comando, "RETO_REQUIERE_EQUIPO") == 0) {
+
+        char id_str[16];
+        recv(comm_socket, id_str, sizeof(id_str), 0);
+        recv(comm_socket, recvBuff, sizeof(recvBuff), 0); // RETO_REQUIERE_EQUIPO-END
+
+        int requiere = 0;
+        int res = retoRequiereEquipo(db, atoi(id_str), &requiere);
+
+        if (res == SQLITE_OK)
+            sprintf(sendBuff, "OK|%d", requiere);
+        else
+            strcpy(sendBuff, "ERROR");
+
+        send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+    }
+
+    // ---- GET_RETO_EXTRA ----
+    else if (strcmp(comando, "GET_RETO_EXTRA") == 0) {
+
+        char id_reto_str[16];
+        char id_usuario_str[16];
+        recv(comm_socket, id_reto_str, sizeof(id_reto_str), 0);
+        recv(comm_socket, id_usuario_str, sizeof(id_usuario_str), 0);
+        recv(comm_socket, recvBuff, sizeof(recvBuff), 0); // GET_RETO_EXTRA-END
+
+        int id_reto = atoi(id_reto_str);
+        int id_usuario = atoi(id_usuario_str);
+
+        TipoRol rol = HACKER;
+        int puesto = 0;
+        int dias = 0;
+
+        int r1 = obtenerRolEnReto (db, id_usuario, id_reto, &rol);
+        int r2 = obtenerPuestoEnReto (db, id_usuario, id_reto, &puesto);
+        int r3 = obtenerDiasRestantes(db, id_reto, &dias);
+
+        if (r1 == SQLITE_OK && r2 == SQLITE_OK && r3 == SQLITE_OK)
+            sprintf(sendBuff, "OK|%d|%d|%d", (int)rol, puesto, dias);
+        else
+            strcpy(sendBuff, "ERROR");
+
+        send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+    }
+
     // ---- EXIT ----
     else if (strcmp(comando, "EXIT") == 0) {
         // servidor.c gestiona el cierre
