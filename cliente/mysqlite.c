@@ -1236,3 +1236,214 @@ static EstadoReto string_a_estado_reto(const char *str) {
     if (strcmp(str, "FINALIZADO") == 0) return FINALIZADO;
     return SIN_COMENZAR;  // valor por defecto
 }
+
+//Evaluaciones
+int insertarEvaluacion(sqlite3 *db,
+                       int id_usuario,
+                       int id_reto,
+                       int puntuacion,
+                       const char *comentario) {
+
+    sqlite3_stmt *stmt;
+
+    const char *sql =
+        "INSERT INTO Evaluaciones "
+        "(id_usuario, id_reto, puntuacion, comentario) "
+        "VALUES (?, ?, ?, ?)";
+
+    int resultado = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+
+    if (resultado != SQLITE_OK) {
+        printf("Error: %s\n", sqlite3_errmsg(db));
+        return resultado;
+    }
+
+    sqlite3_bind_int(stmt, 1, id_usuario);
+    sqlite3_bind_int(stmt, 2, id_reto);
+    sqlite3_bind_int(stmt, 3, puntuacion);
+    sqlite3_bind_text(stmt, 4, comentario, -1, SQLITE_STATIC);
+
+    resultado = sqlite3_step(stmt);
+
+    if (resultado != SQLITE_DONE) {
+        printf("Error insertando evaluacion\n");
+        sqlite3_finalize(stmt);
+        return resultado;
+    }
+
+    printf("Evaluacion insertada correctamente\n");
+
+    sqlite3_finalize(stmt);
+    return SQLITE_OK;
+}
+
+float obtenerMediaReto(sqlite3 *db, int id_reto) {
+
+    sqlite3_stmt *stmt;
+
+    const char *sql =
+        "SELECT AVG(puntuacion) "
+        "FROM Evaluaciones "
+        "WHERE id_reto = ?";
+
+    float media = 0;
+
+    int resultado = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+
+    if (resultado != SQLITE_OK) {
+        printf("Error: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    sqlite3_bind_int(stmt, 1, id_reto);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        media = (float)sqlite3_column_double(stmt, 0);
+    }
+
+    sqlite3_finalize(stmt);
+
+    return media;
+}
+
+//Solicitudes
+int aceptarParticipacion(sqlite3 *db, int id_participacion) {
+
+    sqlite3_stmt *stmt;
+
+    const char *sql =
+        "UPDATE Participaciones "
+        "SET estado = 'ACEPTADO' "
+        "WHERE id = ?";
+
+    int resultado = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+
+    if (resultado != SQLITE_OK) {
+        printf("Error: %s\n", sqlite3_errmsg(db));
+        return resultado;
+    }
+
+    sqlite3_bind_int(stmt, 1, id_participacion);
+
+    resultado = sqlite3_step(stmt);
+
+    sqlite3_finalize(stmt);
+
+    if (resultado == SQLITE_DONE) {
+        printf("Participacion aceptada\n");
+        return SQLITE_OK;
+    }
+
+    return resultado;
+}
+int rechazarParticipacion(sqlite3 *db, int id_participacion) {
+
+    sqlite3_stmt *stmt;
+
+    const char *sql =
+        "UPDATE Participaciones "
+        "SET estado = 'RECHAZADO' "
+        "WHERE id = ?";
+
+    int resultado = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+
+    if (resultado != SQLITE_OK) {
+        printf("Error: %s\n", sqlite3_errmsg(db));
+        return resultado;
+    }
+
+    sqlite3_bind_int(stmt, 1, id_participacion);
+
+    resultado = sqlite3_step(stmt);
+
+    sqlite3_finalize(stmt);
+
+    if (resultado == SQLITE_DONE) {
+        printf("Participacion rechazada\n");
+        return SQLITE_OK;
+    }
+
+    return resultado;
+}
+int listarSolicitudesPendientes(sqlite3 *db, int id_reto) {
+
+    sqlite3_stmt *stmt;
+
+    const char *sql =
+        "SELECT id, id_usuario, motivacion "
+        "FROM Participaciones "
+        "WHERE id_reto = ? AND estado = 'PENDIENTE'";
+
+    int resultado = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+
+    if (resultado != SQLITE_OK) {
+        printf("Error: %s\n", sqlite3_errmsg(db));
+        return resultado;
+    }
+
+    sqlite3_bind_int(stmt, 1, id_reto);
+
+    printf("\nSOLICITUDES PENDIENTES:\n");
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+
+        int id = sqlite3_column_int(stmt, 0);
+        int usuario = sqlite3_column_int(stmt, 1);
+
+        const char *motivacion =
+            (char *)sqlite3_column_text(stmt, 2);
+
+        printf("Solicitud %d | Usuario %d\n",
+               id, usuario);
+
+        printf("Motivacion: %s\n\n", motivacion);
+    }
+
+    sqlite3_finalize(stmt);
+
+    return SQLITE_OK;
+}
+//Ranking
+int listarRankingEquipos(sqlite3 *db, int id_reto) {
+
+    sqlite3_stmt *stmt;
+
+    const char *sql =
+        "SELECT nombre, puntuacion "
+        "FROM Equipos "
+        "WHERE id_reto = ? "
+        "ORDER BY puntuacion DESC";
+
+    int resultado = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+
+    if (resultado != SQLITE_OK) {
+        printf("Error: %s\n", sqlite3_errmsg(db));
+        return resultado;
+    }
+
+    sqlite3_bind_int(stmt, 1, id_reto);
+
+    printf("\nRANKING EQUIPOS:\n");
+
+    int posicion = 1;
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+
+        const char *nombre =
+            (char *)sqlite3_column_text(stmt, 0);
+
+        int puntuacion =
+            sqlite3_column_int(stmt, 1);
+
+        printf("%d. %s - %d puntos\n",
+               posicion,
+               nombre,
+               puntuacion);
+
+        posicion++;
+    }
+
+    sqlite3_finalize(stmt);
+
+    return SQLITE_OK;
+}

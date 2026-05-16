@@ -50,6 +50,17 @@ CREATE TABLE IF NOT EXISTS Equipos (
     UNIQUE(id_reto, nombre)
 );
 
+CREATE TABLE IF NOT EXISTS Evaluaciones (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_usuario INTEGER,
+    id_reto INTEGER,
+    puntuacion INTEGER,
+    comentario TEXT,
+
+    FOREIGN KEY(id_usuario) REFERENCES Usuarios(id),
+    FOREIGN KEY(id_reto) REFERENCES Retos(id)
+);
+
 -- PARTICIPACIONES
 CREATE TABLE IF NOT EXISTS Participaciones (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -86,4 +86,23 @@ static DificultadReto string_a_dificultad(const char *str);
 static TipoReto string_a_tipo_reto(const char *str);
 static EstadoReto string_a_estado_reto(const char *str);
 
+//Evaluaciones
+int insertarEvaluacion(sqlite3 *db,
+                       int id_usuario,
+                       int id_reto,
+                       int puntuacion,
+                       const char *comentario);
+
+float obtenerMediaReto(sqlite3 *db, int id_reto);
+
+// Solicitudes
+int aceptarParticipacion(sqlite3 *db, int id_participacion);
+
+int rechazarParticipacion(sqlite3 *db, int id_participacion);
+
+int listarSolicitudesPendientes(sqlite3 *db, int id_reto);
+
+// Ranking
+int listarRankingEquipos(sqlite3 *db, int id_reto);
+
 #endif
