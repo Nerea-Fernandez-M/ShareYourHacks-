@@ -7,6 +7,7 @@
 
 #ifndef ESTRUCTURAS_H_
 #define ESTRUCTURAS_H_
+#include <winsock2.h>
 
 //Enums
 
@@ -94,11 +95,19 @@ typedef struct {
 	int total_puntos;
 } Usuario;
 
-//Conversion de enums
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+// conversion de enums
 const char *estado_aceptacion_a_string(EstadoAceptacion estado);
 const char *estado_reto_a_string      (EstadoReto estado);
 const char *tipo_reto_a_string        (TipoReto tipo);
 const char *dificultad_reto_a_string  (DificultadReto dificultad);
 const char *tipo_rol_a_string         (TipoRol rol);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ESTRUCTURAS_H_ */

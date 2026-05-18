@@ -2,6 +2,8 @@
 #define NAVEGACION_H_
 
 #include "estructuras.h"
+#include "sqlite3.h"
+#include <winsock2.h>
 #define MAX_RETOS 128 //para visualizar retos
 #define MAX_USUARIOS 128 //para visaulizar el ranking
 
@@ -35,11 +37,12 @@ typedef enum {
 } TipoRanking;
 
 typedef struct{
+	SOCKET sock;
     TipoVentana actual;
     TipoVentana historial[16];
     int historialTop;
     Usuario *usuario;
-    sqlite3     *db;
+    sqlite3 *db;
     int retoSeleccionadoId;
     FiltroRetos  filtro;
     TipoRanking  tipoRanking;
