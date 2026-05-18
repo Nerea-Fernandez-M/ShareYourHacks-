@@ -1,6 +1,6 @@
 #include "procesador.h"
-#include "mysqlite.h"
-#inlcude "estructuras.h"
+#include "../src/mysqlite.h"
+#include "../src/estructuras.h"
 #include <string.h>
 #include <stdio.h>
 

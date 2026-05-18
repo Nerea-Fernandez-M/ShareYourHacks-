@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "mysqlite.h"
-#include "navegacion.h"
+#include "../../src/mysqlite.h"
+#include "../../src/navegacion.h"
 
 typedef void (*GestorVentana)(Ventana *ventana);
 
