@@ -780,7 +780,7 @@ void iniciarSesion(Ventana *v) {
         printf("Nombre de usuario: "); fflush(stdout);
         scanf("%63s", nombre); while (getchar() != '\n');
 
-        printf("Contrasena: "); fflush(stdout);
+        printf("Contraseña: "); fflush(stdout);
         scanf("%127s", contrasena); while (getchar() != '\n');
 
         enviarComando(v->sock, "LOGIN");
@@ -805,7 +805,7 @@ void iniciarSesion(Ventana *v) {
             return;
         }
 
-        printf("Nombre de usuario o contrasena incorrectos\n"); fflush(stdout);
+        printf("Nombre de usuario o contraseña incorrectos\n"); fflush(stdout);
         printf("Pulsa 1 para intentarlo de nuevo o 0 para volver: "); fflush(stdout);
 
         int opcion;
@@ -826,14 +826,14 @@ void registrar(Ventana *v) {
         printf("Nombre de usuario: "); fflush(stdout);
         scanf("%63s", nombre); while (getchar() != '\n');
 
-        printf("Contrasena: "); fflush(stdout);
+        printf("Contraseña: "); fflush(stdout);
         scanf("%127s", contrasena); while (getchar() != '\n');
 
-        printf("Repetir contrasena: "); fflush(stdout);
+        printf("Repetir contraseña: "); fflush(stdout);
         scanf("%127s", contrasena2); while (getchar() != '\n');
 
         if (strcmp(contrasena, contrasena2) != 0) {
-            printf("Las contrasenas no coinciden, intentalo de nuevo.\n\n"); fflush(stdout);
+            printf("Las contraseñas no coinciden, intentalo de nuevo.\n\n"); fflush(stdout);
             continue;
         }
 

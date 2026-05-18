@@ -3,12 +3,15 @@
 #include "../src/estructuras.h"
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include "log.h"
 
 // Función principal que recibe el comando y el socket
 void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
 
     char recvBuff[1024];
     char sendBuff[32768];  // 32KB para listas de retos/usuarios
+    char logBuff[256];
 
     // ---- LOGIN ----
     if (strcmp(comando, "LOGIN") == 0) {
@@ -23,11 +26,16 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
         int id = 0, puntos = 0;
         int res = obtenerUsuarioPorCredenciales(db, nombre, contrasena, &id, &puntos);
 
-        // Responder al cliente
-        if (res == SQLITE_OK)
+        // responder al cliente y registrar en el log
+        if (res == SQLITE_OK) {
             sprintf(sendBuff, "OK|%d|%d|%s", id, puntos, nombre);
-        else
+            snprintf(logBuff, sizeof(logBuff), "LOGIN EXITOSO: Usuario '%s' (ID: %d)", nombre, id);
+            guardar_log(logBuff);
+        } else {
             strcpy(sendBuff, "ERROR");
+            snprintf(logBuff, sizeof(logBuff), "LOGIN FALLIDO: Intento de acceso con el usuario '%s'", nombre);
+            guardar_log(logBuff);
+        }
 
         send(comm_socket, sendBuff, sizeof(sendBuff), 0);
     }
@@ -47,8 +55,13 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
             int id = 0, puntos = 0;
             obtenerUsuarioPorCredenciales(db, nombre, contrasena, &id, &puntos);
             sprintf(sendBuff, "OK|%d", id);
+
+            snprintf(logBuff, sizeof(logBuff), "REGISTRO: Nuevo usuario creado: '%s' (ID: %d, Email: %s)", nombre, id, email);
+            guardar_log(logBuff);
         } else {
             strcpy(sendBuff, "ERROR");
+            snprintf(logBuff, sizeof(logBuff), "REGISTRO FALLIDO: Error al intentar registrar usuario '%s'", nombre);
+            guardar_log(logBuff);
         }
 
         send(comm_socket, sendBuff, sizeof(sendBuff), 0);
@@ -64,6 +77,11 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
         recv(comm_socket, recvBuff, sizeof(recvBuff), 0); // GET_RETOS-END
 
         int id_usuario = atoi(id_usuario_str);
+
+        // Registrar la consulta en el log
+        snprintf(logBuff, sizeof(logBuff), "CONSULTA: Solicitud de listado de retos con filtro '%s' (ID Usuario solicitante: %d)", filtro, id_usuario);
+        guardar_log(logBuff);
+
         Reto retos[MAX_RETOS];
         int cantidad = 0;
 
@@ -73,7 +91,6 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
         else if (strcmp(filtro, "ORGANIZADOS") == 0) listarRetosOrganizadosUsuario(db, id_usuario, retos, &cantidad);
 
         // Construir respuesta: una fila por reto separada por \n
-        // Formato: id|titulo|estado|puntos\n
         memset(sendBuff, 0, sizeof(sendBuff));
         for (int i = 0; i < cantidad; i++) {
             char linea[256];
@@ -95,6 +112,9 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
         char id_str[16];
         recv(comm_socket, id_str, sizeof(id_str), 0);
         recv(comm_socket, recvBuff, sizeof(recvBuff), 0); // GET_RETO-END
+
+        snprintf(logBuff, sizeof(logBuff), "CONSULTA: Acceso a detalles del Reto ID: %s", id_str);
+        guardar_log(logBuff);
 
         Reto reto;
         obtenerRetoPorId(db, atoi(id_str), &reto);
@@ -122,6 +142,10 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
         recv(comm_socket, recvBuff, sizeof(recvBuff), 0); // GET_PERFIL-END
 
         int id_usuario = atoi(id_str);
+
+        snprintf(logBuff, sizeof(logBuff), "CONSULTA: Carga de estadísticas de Perfil de Usuario ID: %d", id_usuario);
+        guardar_log(logBuff);
+
         int ranking = 0, puntos_activos = 0, puntos_organizados = 0;
 
         obtenerRankingUsuario(db, id_usuario, &ranking);
@@ -139,6 +163,9 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
         recv(comm_socket, tipo, sizeof(tipo), 0);
         recv(comm_socket, id_str, sizeof(id_str), 0);
         recv(comm_socket, recvBuff, sizeof(recvBuff), 0); // GET_RANKING-END
+
+        snprintf(logBuff, sizeof(logBuff), "CONSULTA: Visualizacion de Ranking de tipo '%s' (ID Contexto: %s)", tipo, id_str);
+        guardar_log(logBuff);
 
         Usuario usuarios[MAX_USUARIOS];
         int cantidad = 0;
@@ -175,6 +202,14 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
                                         atoi(id_equipo_str),
                                         motivacion);
 
+        if (res == SQLITE_OK) {
+            snprintf(logBuff, sizeof(logBuff), "OPERACION: Inscripcion realizada con exito. Usuario ID: %s en Reto ID: %s (Equipo ID: %s)", id_usuario_str, id_reto_str, id_equipo_str);
+            guardar_log(logBuff);
+        } else {
+            snprintf(logBuff, sizeof(logBuff), "ERROR: Fallo al inscribir al Usuario ID: %s en el Reto ID: %s", id_usuario_str, id_reto_str);
+            guardar_log(logBuff);
+        }
+
         strcpy(sendBuff, res == SQLITE_OK ? "OK" : "ERROR");
         send(comm_socket, sendBuff, sizeof(sendBuff), 0);
     }
@@ -203,6 +238,14 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
                                atoi(plazas_str), f_ini, f_fin,
                                f_ini_insc, f_fin_insc,
                                atoi(puntos_str), atoi(id_org_str));
+
+        if (res == SQLITE_OK) {
+            snprintf(logBuff, sizeof(logBuff), "OPERACION: Reto '%s' (%s) creado exitosamente por Organizador ID: %s", titulo, tipo, id_org_str);
+            guardar_log(logBuff);
+        } else {
+            snprintf(logBuff, sizeof(logBuff), "ERROR: Fallo al insertar nuevo reto '%s' en la Base de Datos", titulo);
+            guardar_log(logBuff);
+        }
 
         strcpy(sendBuff, res == SQLITE_OK ? "OK" : "ERROR");
         send(comm_socket, sendBuff, sizeof(sendBuff), 0);
@@ -275,6 +318,6 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
 
     // ---- EXIT ----
     else if (strcmp(comando, "EXIT") == 0) {
-        // servidor.c gestiona el cierre
+        guardar_log("SISTEMA: El cliente ha solicitado el cierre de conexion (EXIT).");
     }
 }

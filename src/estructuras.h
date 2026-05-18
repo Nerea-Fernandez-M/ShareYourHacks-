@@ -96,6 +96,7 @@ typedef struct {
 } Usuario;
 
 #ifdef __cplusplus
+
 extern "C" {
 #endif
 
