@@ -65,7 +65,5 @@ void funcionalidadOrganizarReto(Ventana *v);
 void iniciarSesion(Ventana *v);
 void registrar(Ventana *v);
 
-//Funciones auxiliares conversion de enums
-const char *estado_reto_a_string(EstadoReto estado);
 
 #endif /* NAVEGACION_H_ */

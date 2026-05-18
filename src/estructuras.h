@@ -96,6 +96,7 @@ typedef struct {
 
 //Conversion de enums
 const char *estado_aceptacion_a_string(EstadoAceptacion estado);
+const char *estado_reto_a_string      (EstadoReto estado);
 const char *tipo_reto_a_string        (TipoReto tipo);
 const char *dificultad_reto_a_string  (DificultadReto dificultad);
 const char *tipo_rol_a_string         (TipoRol rol);

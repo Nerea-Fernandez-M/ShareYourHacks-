@@ -12,6 +12,15 @@ const char *estado_aceptacion_a_string(EstadoAceptacion estado) {
     return nombres[estado];
 }
 
+const char *estado_reto_a_string(EstadoReto estado) {
+    switch (estado) {
+        case EN_CURSO:    return "EN_CURSO";
+        case FINALIZADO:  return "FINALIZADO";
+        case SIN_COMENZAR:
+        default:          return "SIN_COMENZAR";
+    }
+}
+
 const char *tipo_reto_a_string(TipoReto tipo) {
     static const char *nombres[] = {
         [CTF]       = "CTF",

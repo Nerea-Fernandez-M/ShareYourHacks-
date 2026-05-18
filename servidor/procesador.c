@@ -8,7 +8,7 @@
 void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
 
     char recvBuff[1024];
-    char sendBuff[1024];
+    char sendBuff[32768];  // 32KB para listas de retos/usuarios
 
     // ---- LOGIN ----
     if (strcmp(comando, "LOGIN") == 0) {

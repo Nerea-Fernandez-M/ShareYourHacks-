@@ -760,12 +760,3 @@ void registrar(Ventana *v) {
     }
 }
 
-//Funciones auxiliares conversion de enums
-const char *estado_reto_a_string(EstadoReto estado) {
-    switch (estado) {
-        case EN_CURSO:   return "EN_CURSO";
-        case FINALIZADO: return "FINALIZADO";
-        case SIN_COMENZAR:
-        default:         return "SIN_COMENZAR";
-    }
-}
