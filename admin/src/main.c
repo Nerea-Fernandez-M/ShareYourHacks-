@@ -13,7 +13,7 @@ GestorVentana gestores[VENTANA_COUNT] = {
     [VENTANA_RANKING]        = funcionalidadRanking,
     [VENTANA_PERFIL]         = funcionalidadPerfil,
     [VENTANA_ORGANIZAR_RETO] = funcionalidadOrganizarReto,
-    [VENTANA_EXIT]           = NULL,   // TODO hacer funcion de salida
+    [VENTANA_EXIT]           = funcionalidadExit,
 };
 
 int main() {
@@ -42,17 +42,18 @@ int main() {
     fflush(stdout);
 
     Ventana ventana = {
-        .actual        = VENTANA_MENU_MAIN,
+        .actual = VENTANA_MENU_MAIN,
         .historialTop = 0,
-        .db            = db,
-        .usuario       = NULL,
+        .db = db,
+        .usuario = NULL,
     };
 
     while (ventana.actual != VENTANA_EXIT) {
         gestores[ventana.actual](&ventana);
     }
 
-    ventanaLimpiar(&ventana); //TODO limpieza antes de salir
+    funcionalidadExit(&ventana);  // saliendo de la aplicacion
+    ventanaLimpiar(&ventana);  // limpieza
     return 0;
 
 }

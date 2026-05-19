@@ -26,13 +26,14 @@ void ventanaLimpiar(Ventana *v) {
 void funcionalidadMenu(Ventana *v){
 
 	//Print del texto
-    printf("----Bienvenid@ a ShareYourHacks -----\n"); fflush(stdout);
+    printf("---- Bienvenid@ a ShareYourHacks -----\n"); fflush(stdout);
     printf("1) Ver tus retos activos\n"); fflush(stdout);
     printf("2) Ver proximos retos\n"); fflush(stdout);
     printf("3) Ver todos los retos\n"); fflush(stdout);
     printf("4) Ver tu perfil\n"); fflush(stdout);
     printf("5) Ver Ranking\n"); fflush(stdout);
     printf("6) Organizar un reto\n"); fflush(stdout);
+    printf("7) Exit\n"); fflush(stdout);
     printf("Introduce un numero: "); fflush(stdout);
 
 	//Gestion de la consola
@@ -67,6 +68,9 @@ void funcionalidadMenu(Ventana *v){
             break;
         case 6:
         	navegar(v,VENTANA_ORGANIZAR_RETO);
+        	break;
+        case 7:
+        	navegar(v, VENTANA_EXIT);
         	break;
         case 0:
             volver(v);
@@ -759,5 +763,9 @@ void registrar(Ventana *v) {
         // Error en la BD (nombre o email duplicado, u otro error)
         printf("No se ha podido registrar el usuario, intentalo de nuevo.\n\n"); fflush(stdout);
     }
+}
+
+void funcionalidadExit(Ventana *v) {
+    printf("Saliendo de la aplicación...");
 }
 

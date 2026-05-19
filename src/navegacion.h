@@ -63,6 +63,7 @@ void funcionalidadRetoCompleto(Ventana *v);
 void funcionalidadApuntarse(Ventana *v);
 void funcionalidadRanking(Ventana *v);
 void funcionalidadOrganizarReto(Ventana *v);
+void funcionalidadExit(Ventana *v);
 
 //Gestion de Usuario
 void iniciarSesion(Ventana *v);
