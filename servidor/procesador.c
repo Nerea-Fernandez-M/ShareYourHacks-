@@ -22,7 +22,7 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
         recv(comm_socket, contrasena, sizeof(contrasena), 0);
         recv(comm_socket, recvBuff, sizeof(recvBuff),   0); // LOGIN-END
 
-        // Llamar a la BD
+        // Llamar a la bd
         int id = 0, puntos = 0;
         int res = obtenerUsuarioPorCredenciales(db, nombre, contrasena, &id, &puntos);
 
@@ -78,7 +78,7 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
 
         int id_usuario = atoi(id_usuario_str);
 
-        // Registrar la consulta en el log
+        // registrar la consulta en el log
         snprintf(logBuff, sizeof(logBuff), "CONSULTA: Solicitud de listado de retos con filtro '%s' (ID Usuario solicitante: %d)", filtro, id_usuario);
         guardar_log(logBuff);
 
