@@ -78,7 +78,7 @@ void funcionalidadMenu(Ventana *v) {
     printf("4) Ver tu perfil\n"); fflush(stdout);
     printf("5) Ver Ranking\n"); fflush(stdout);
     printf("6) Organizar un reto\n"); fflush(stdout);
-    printf("0) Salir de la aplicacion\n"); fflush(stdout);
+    printf("7) Exit\n"); fflush(stdout);
     printf("Introduce un numero: "); fflush(stdout);
 
     int opcion;
@@ -116,7 +116,7 @@ void funcionalidadMenu(Ventana *v) {
             }
             navegar(v, VENTANA_ORGANIZAR_RETO);
             break;
-        case 0:
+        case 7:
             v->actual = VENTANA_EXIT;
             break;
         default:
@@ -861,4 +861,10 @@ void registrar(Ventana *v) {
 
         printf("No se ha podido registrar el usuario, intentalo de nuevo.\n\n"); fflush(stdout);
     }
+}
+
+// --- EXIT ---
+
+void funcionalidadExit(Ventana *v) {
+    printf("Saliendo de la aplicación...");
 }

@@ -72,9 +72,6 @@ void funcionalidadMenu(Ventana *v){
         case 7:
         	navegar(v, VENTANA_EXIT);
         	break;
-        case 0:
-            volver(v);
-            break;
         default:
             printf("Opcion no valida, intentalo de nuevo.\n"); fflush(stdout);
             break;
