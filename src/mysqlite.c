@@ -34,7 +34,7 @@ int inicializarBD(sqlite3 *db) {
         printf("Directorio actual: %s\n", ruta);
 
     // Leer el contenido de init.sql
-    FILE *archivo = fopen("init.sql", "r");
+    FILE *archivo = fopen("admin/init.sql", "r");
     if (!archivo) {
         printf("Error: No se encontró init.sql\n");
         return 1;

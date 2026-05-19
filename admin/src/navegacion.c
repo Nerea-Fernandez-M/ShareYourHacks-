@@ -69,7 +69,7 @@ void funcionalidadMenu(Ventana *v){
         	navegar(v,VENTANA_ORGANIZAR_RETO);
         	break;
         case 0:
-            v->actual = VENTANA_EXIT;
+            volver(v);
             break;
         default:
             printf("Opcion no valida, intentalo de nuevo.\n"); fflush(stdout);
@@ -114,12 +114,12 @@ void funcionalidadPerfil(Ventana *v){
 	        v->filtro = FILTRO_ORGANIZADOS_USUARIO;
 			navegar(v, VENTANA_VER_RETOS);
 			break;
-	        case 0:
-	            v->actual = VENTANA_EXIT;
-	            break;
-	        default:
-	            printf("Opcion no valida, intentalo de nuevo.\n"); fflush(stdout);
-	            break;
+		case 0:
+			volver(v);
+			break;
+		default:
+			printf("Opcion no valida, intentalo de nuevo.\n"); fflush(stdout);
+			break;
 	    }
 
 	}else{ //Sesion no iniciada
@@ -134,6 +134,9 @@ void funcionalidadPerfil(Ventana *v){
 
 	    //Gestion de opciones
 	    switch(opcion){
+	    case 0:
+	    	volver(v);
+	    	break;
 	    case 1:
 	    	iniciarSesion(v);
 	    	break;
@@ -687,7 +690,6 @@ void iniciarSesion(Ventana *v) {
             v->usuario->total_puntos = puntos;
             strncpy(v->usuario->nombre, nombre, sizeof(v->usuario->nombre) - 1);
 
-            navegar(v, VENTANA_PERFIL);
             return;
         }
 
@@ -751,7 +753,6 @@ void registrar(Ventana *v) {
             v->usuario->total_puntos = puntos;
             strncpy(v->usuario->nombre, nombre, sizeof(v->usuario->nombre) - 1);
 
-            navegar(v, VENTANA_PERFIL);
             return;
         }
 
