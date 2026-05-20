@@ -39,7 +39,7 @@ typedef struct{
     TipoVentana historial[16];
     int historialTop;
     Usuario *usuario;
-    sqlite3 *db;
+    sqlite3     *db;
     int retoSeleccionadoId;
     FiltroRetos  filtro;
     TipoRanking  tipoRanking;

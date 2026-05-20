@@ -10,8 +10,10 @@
 #include <cstring>
 #include <cctype>
 #include <winsock2.h>
-#include "../src/estructuras.h"
-#include "../src/navegacion.h"
+extern "C" {
+    #include "../src/estructuras.h"
+    #include "../src/navegacion.h"
+}
 
 // --- COMUNICACION CON EL SERVIDOR ---
 
@@ -415,6 +417,7 @@ void funcionalidadReto(Ventana *v) {
         printf("Creado por:%s \n", nombre_org); fflush(stdout);
         printf("Resumen: %s\n", reto.descripcion); fflush(stdout);
         printf("Tu rol: %s\n", tipo_rol_a_string(rol)); fflush(stdout);
+        fflush(stdout);
         printf("Tipo de reto: %s\n", tipo_reto_a_string(reto.tipoReto)); fflush(stdout);
         printf("Tiempo restante: %d dias\n", dias_restantes); fflush(stdout);
         printf("Tu puesto: #%d\n", puesto); fflush(stdout);

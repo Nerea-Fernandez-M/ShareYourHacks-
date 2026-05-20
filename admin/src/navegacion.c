@@ -1,8 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "estructuras.h"
+#include "sqlite3.h"
 #include "navegacion.h"
 
 //Funciones de gestion
@@ -29,14 +26,13 @@ void ventanaLimpiar(Ventana *v) {
 void funcionalidadMenu(Ventana *v){
 
 	//Print del texto
-    printf("---- Bienvenid@ a ShareYourHacks -----\n"); fflush(stdout);
+    printf("----Bienvenid@ a ShareYourHacks -----\n"); fflush(stdout);
     printf("1) Ver tus retos activos\n"); fflush(stdout);
     printf("2) Ver proximos retos\n"); fflush(stdout);
     printf("3) Ver todos los retos\n"); fflush(stdout);
     printf("4) Ver tu perfil\n"); fflush(stdout);
     printf("5) Ver Ranking\n"); fflush(stdout);
     printf("6) Organizar un reto\n"); fflush(stdout);
-    printf("7) Exit\n"); fflush(stdout);
     printf("Introduce un numero: "); fflush(stdout);
 
 	//Gestion de la consola
@@ -72,9 +68,9 @@ void funcionalidadMenu(Ventana *v){
         case 6:
         	navegar(v,VENTANA_ORGANIZAR_RETO);
         	break;
-        case 7:
-        	navegar(v, VENTANA_EXIT);
-        	break;
+        case 0:
+            v->actual = VENTANA_EXIT;
+            break;
         default:
             printf("Opcion no valida, intentalo de nuevo.\n"); fflush(stdout);
             break;
@@ -118,12 +114,12 @@ void funcionalidadPerfil(Ventana *v){
 	        v->filtro = FILTRO_ORGANIZADOS_USUARIO;
 			navegar(v, VENTANA_VER_RETOS);
 			break;
-		case 0:
-			volver(v);
-			break;
-		default:
-			printf("Opcion no valida, intentalo de nuevo.\n"); fflush(stdout);
-			break;
+	        case 0:
+	            v->actual = VENTANA_EXIT;
+	            break;
+	        default:
+	            printf("Opcion no valida, intentalo de nuevo.\n"); fflush(stdout);
+	            break;
 	    }
 
 	}else{ //Sesion no iniciada
@@ -138,9 +134,6 @@ void funcionalidadPerfil(Ventana *v){
 
 	    //Gestion de opciones
 	    switch(opcion){
-	    case 0:
-	    	volver(v);
-	    	break;
 	    case 1:
 	    	iniciarSesion(v);
 	    	break;
@@ -694,6 +687,7 @@ void iniciarSesion(Ventana *v) {
             v->usuario->total_puntos = puntos;
             strncpy(v->usuario->nombre, nombre, sizeof(v->usuario->nombre) - 1);
 
+            navegar(v, VENTANA_PERFIL);
             return;
         }
 
@@ -757,6 +751,7 @@ void registrar(Ventana *v) {
             v->usuario->total_puntos = puntos;
             strncpy(v->usuario->nombre, nombre, sizeof(v->usuario->nombre) - 1);
 
+            navegar(v, VENTANA_PERFIL);
             return;
         }
 
@@ -765,7 +760,12 @@ void registrar(Ventana *v) {
     }
 }
 
-void funcionalidadExit(Ventana *v) {
-    printf("Saliendo de la aplicación...");
+//Funciones auxiliares conversion de enums
+const char *estado_reto_a_string(EstadoReto estado) {
+    switch (estado) {
+        case EN_CURSO:   return "EN_CURSO";
+        case FINALIZADO: return "FINALIZADO";
+        case SIN_COMENZAR:
+        default:         return "SIN_COMENZAR";
+    }
 }
-

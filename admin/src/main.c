@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "../../src/mysqlite.h"
-#include "../../src/navegacion.h"
+#include "mysqlite.h"
+#include "navegacion.h"
 
 typedef void (*GestorVentana)(Ventana *ventana);
 
@@ -13,7 +13,7 @@ GestorVentana gestores[VENTANA_COUNT] = {
     [VENTANA_RANKING]        = funcionalidadRanking,
     [VENTANA_PERFIL]         = funcionalidadPerfil,
     [VENTANA_ORGANIZAR_RETO] = funcionalidadOrganizarReto,
-    [VENTANA_EXIT]           = funcionalidadExit,
+    [VENTANA_EXIT]           = NULL,   // TODO hacer funcion de salida
 };
 
 int main() {
@@ -42,18 +42,17 @@ int main() {
     fflush(stdout);
 
     Ventana ventana = {
-        .actual = VENTANA_MENU_MAIN,
+        .actual        = VENTANA_MENU_MAIN,
         .historialTop = 0,
-        .db = db,
-        .usuario = NULL,
+        .db            = db,
+        .usuario       = NULL,
     };
 
     while (ventana.actual != VENTANA_EXIT) {
         gestores[ventana.actual](&ventana);
     }
 
-    funcionalidadExit(&ventana);  // saliendo de la aplicacion
-    ventanaLimpiar(&ventana);  // limpieza
+    ventanaLimpiar(&ventana); //TODO limpieza antes de salir
     return 0;
 
 }
