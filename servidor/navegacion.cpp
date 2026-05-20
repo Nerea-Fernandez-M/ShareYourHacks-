@@ -117,7 +117,7 @@ void funcionalidadMenu(Ventana *v) {
             navegar(v, VENTANA_ORGANIZAR_RETO);
             break;
         case 7:
-            v->actual = VENTANA_EXIT;
+        	navegar(v, VENTANA_EXIT);
             break;
         default:
             printf("Opcion no valida, intentalo de nuevo.\n"); fflush(stdout);
@@ -207,6 +207,17 @@ const char *estado_reto_a_string(EstadoReto estado) {
         case FINALIZADO:   return "FINALIZADO";
         default:           return "DESCONOCIDO";
     }
+}
+
+const char *tipo_reto_a_string(TipoReto tipo) {
+    if (tipo == CTF) return "CTF";
+    return "HACKATHON";
+}
+
+const char *dificultad_reto_a_string(DificultadReto dif) {
+    if (dif == FACIL) return "FACIL";
+    if (dif == MEDIO) return "MEDIO";
+    return "DIFICIL";
 }
 // ─────────────────────────────────────────────
 
@@ -612,12 +623,101 @@ void funcionalidadApuntarse(Ventana *v) {
 
     // gestionar equipo
     printf("Pulsa 1 para unirte a un equipo o 2 para crear uno: "); fflush(stdout);
+
     int opcion_equipo;
     scanf("%d", &opcion_equipo);
     while (getchar() != '\n');
 
     int id_equipo = 0;
-    printf("(Gestion de equipos pendiente de implementar en el servidor)\n"); fflush(stdout);
+
+    if (opcion_equipo == 1) {
+
+        while (1) {
+
+            char nombre_equipo[64];
+
+            printf("Introduce el nombre de tu equipo: "); fflush(stdout);
+
+            scanf("%63s", nombre_equipo);
+            while (getchar() != '\n');
+
+            enviarComando(v->sock, "BUSCAR_EQUIPO");
+            enviarParam(v->sock, nombre_equipo, 64);
+            enviarParam(v->sock, id_reto_str, 64);
+            enviarFin(v->sock, "BUSCAR_EQUIPO-END");
+
+            char resp_equipo[32768];
+            recibirRespuesta(v->sock, resp_equipo, sizeof(resp_equipo));
+
+            if (strncmp(resp_equipo, "OK", 2) == 0) {
+
+                sscanf(resp_equipo, "OK|%d", &id_equipo);
+
+                char id_equipo_str[16];
+                snprintf(id_equipo_str, sizeof(id_equipo_str), "%d", id_equipo);
+
+                enviarComando(v->sock, "UNIRSE_EQUIPO");
+                enviarParam(v->sock, id_usuario_str, 64);
+                enviarParam(v->sock, id_equipo_str, 64);
+                enviarFin(v->sock, "UNIRSE_EQUIPO-END");
+
+                char resp_union[32768];
+                recibirRespuesta(v->sock, resp_union, sizeof(resp_union));
+
+                if (strncmp(resp_union, "OK", 2) == 0) {
+                    printf("Te has unido al equipo correctamente.\n");
+                    fflush(stdout);
+                    break;
+                }
+            }
+
+            printf("Algo ha ido mal.\n");
+            printf("Pulsa 1 para intentarlo de nuevo o 0 para salir: ");
+
+            int salir;
+            scanf("%d", &salir);
+            while (getchar() != '\n');
+
+            if (salir == 0) {
+                volver(v);
+                return;
+            }
+        }
+
+    } else {
+
+        while (1) {
+
+            char nombre_equipo[64];
+
+            printf("Introduce el nombre de tu equipo: "); fflush(stdout);
+
+            scanf("%63s", nombre_equipo);
+            while (getchar() != '\n');
+
+            enviarComando(v->sock, "CREAR_EQUIPO");
+            enviarParam(v->sock, nombre_equipo, 64);
+            enviarParam(v->sock, id_reto_str, 64);
+            enviarParam(v->sock, id_usuario_str, 64);
+            enviarFin(v->sock, "CREAR_EQUIPO-END");
+
+            char resp_equipo[32768];
+            recibirRespuesta(v->sock, resp_equipo, sizeof(resp_equipo));
+
+            if (strncmp(resp_equipo, "OK", 2) == 0) {
+
+                sscanf(resp_equipo, "OK|%d", &id_equipo);
+
+                printf("Este es el codigo de tu equipo: %d\n", id_equipo);
+                fflush(stdout);
+
+                break;
+            }
+
+            printf("Este nombre no es valido, prueba con otro.\n");
+            fflush(stdout);
+        }
+    }
 
     char id_equipo_str[16];
     snprintf(id_equipo_str, sizeof(id_equipo_str), "%d", id_equipo);

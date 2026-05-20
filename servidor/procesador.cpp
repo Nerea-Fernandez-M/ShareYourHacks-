@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "log.h"
+#include "../src/navegacion.h"
 
 // Función principal que recibe el comando y el socket
 void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
@@ -76,7 +77,7 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
         recv(comm_socket, id_usuario_str, sizeof(id_usuario_str), 0);
         recv(comm_socket, recvBuff, sizeof(recvBuff), 0); // GET_RETOS-END
 
-        int id_usuario = atoi(id_usuario_str);
+        int id_usuario = atoi(const char *)id_usuario_str);
 
         // registrar la consulta en el log
         snprintf(logBuff, sizeof(logBuff), "CONSULTA: Solicitud de listado de retos con filtro '%s' (ID Usuario solicitante: %d)", filtro, id_usuario);
@@ -117,7 +118,7 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
         guardar_log(logBuff);
 
         Reto reto;
-        obtenerRetoPorId(db, atoi(id_str), &reto);
+        obtenerRetoPorId(db, atoi((const char *)id_str), &reto);
 
         sprintf(sendBuff, "%d|%s|%s|%s|%s|%s|%s|%s|%d|%d",
                 reto.id,
@@ -141,7 +142,7 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
         recv(comm_socket, id_str, sizeof(id_str), 0);
         recv(comm_socket, recvBuff, sizeof(recvBuff), 0); // GET_PERFIL-END
 
-        int id_usuario = atoi(id_str);
+        int id_usuario = atoi((const char *)id_str);
 
         snprintf(logBuff, sizeof(logBuff), "CONSULTA: Carga de estadísticas de Perfil de Usuario ID: %d", id_usuario);
         guardar_log(logBuff);
@@ -173,7 +174,7 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
         if (strcmp(tipo, "GLOBAL") == 0)
             listarRankingGlobal(db, usuarios, &cantidad);
         else
-            listarRankingReto(db, atoi(id_str), usuarios, &cantidad);
+            listarRankingReto(db, atoi((const char *)id_str), usuarios, &cantidad);
 
         memset(sendBuff, 0, sizeof(sendBuff));
         for (int i = 0; i < cantidad; i++) {
@@ -197,9 +198,9 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
         recv(comm_socket, recvBuff, sizeof(recvBuff), 0); // INSCRIBIR-END
 
         int res = insertarParticipacion(db,
-                                        atoi(id_usuario_str),
-                                        atoi(id_reto_str),
-                                        atoi(id_equipo_str),
+                                        atoi((const char *)id_usuario_str),
+                                        atoi((const char *)id_reto_str),
+                                        atoi((const char *)id_equipo_str),
                                         motivacion);
 
         if (res == SQLITE_OK) {
@@ -235,9 +236,9 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
         recv(comm_socket, recvBuff, sizeof(recvBuff),0); // CREAR_RETO-END
 
         int res = insertarReto(db, titulo, resumen, dificultad,
-                               atoi(plazas_str), f_ini, f_fin,
+                               atoi((const char *)plazas_str), f_ini, f_fin,
                                f_ini_insc, f_fin_insc,
-                               atoi(puntos_str), atoi(id_org_str));
+                               atoi((const char *)puntos_str), atoi((const char *)id_org_str));
 
         if (res == SQLITE_OK) {
             snprintf(logBuff, sizeof(logBuff), "OPERACION: Reto '%s' (%s) creado exitosamente por Organizador ID: %s", titulo, tipo, id_org_str);
@@ -260,7 +261,7 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
 
         char nombre[30] = "";
         char email[50]  = "";
-        int res = obtenerUsuario(db, atoi(id_str), nombre, email);
+        int res = obtenerUsuario(db, atoi((const char *)id_str), nombre, email);
 
         if (res == SQLITE_OK)
             sprintf(sendBuff, "OK|%s|%s", nombre, email);
@@ -278,7 +279,7 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
         recv(comm_socket, recvBuff, sizeof(recvBuff), 0); // RETO_REQUIERE_EQUIPO-END
 
         int requiere = 0;
-        int res = retoRequiereEquipo(db, atoi(id_str), &requiere);
+        int res = retoRequiereEquipo(db, atoi((const char *)id_str), &requiere);
 
         if (res == SQLITE_OK)
             sprintf(sendBuff, "OK|%d", requiere);
@@ -297,8 +298,8 @@ void procesarComando(SOCKET comm_socket, sqlite3 *db, char *comando) {
         recv(comm_socket, id_usuario_str, sizeof(id_usuario_str), 0);
         recv(comm_socket, recvBuff, sizeof(recvBuff), 0); // GET_RETO_EXTRA-END
 
-        int id_reto = atoi(id_reto_str);
-        int id_usuario = atoi(id_usuario_str);
+        int id_reto = atoi((const char *)id_reto_str);
+        int id_usuario = atoi((const char *)id_usuario_str);
 
         TipoRol rol = HACKER;
         int puesto = 0;

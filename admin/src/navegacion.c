@@ -1,6 +1,9 @@
 #include <stdio.h>
-#include "../../src/sqlite3.h"
-#include "../../src/navegacion.h"
+#include <stdlib.h>
+#include <string.h>
+
+#include "estructuras.h"
+#include "navegacion.h"
 
 //Funciones de gestion
 void navegar(Ventana *v, TipoVentana destino) {
